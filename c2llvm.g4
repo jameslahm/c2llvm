@@ -50,17 +50,17 @@ continueStatement:
     'continue' ';';
 
 variableDefinitionStatement:
-	type ID ('=' expression)? (',' ID ('=' expression)?)* ';';
+	vType ID ('=' expression)? (',' ID ('=' expression)?)* ';';
 
 funcStatement:
     ID '(' paramsPattern ')';
 
 functionDeclaration:
-	type ID '(' paramsPattern ')' '{' statement* '}';
+	vType ID '(' paramsPattern ')' '{' statement* '}';
 
 paramsPattern: paramPattern (',' paramPattern)* |;
 
-paramPattern: type ID;
+paramPattern: vType ID;
 
 expression:
 	'(' expression ')'
@@ -76,7 +76,7 @@ expression:
 	| ID
 	| funcStatement;
 
-type: 'int' | 'double' | 'char';
+vType: 'int' | 'double' | 'char';
 
 ID: [a-zA-Z_][0-9a-zA-Z_]*;
 DOUBLE: [0-9]+ '.' [0-9]+;
