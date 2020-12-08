@@ -1,0 +1,85 @@
+grammar c2llvm;
+
+prog: (include)* (declaration | statement)*;
+
+include: '#include' '<' LIB '>';
+
+declaration: functionDeclaration;
+
+statement:
+	variableDefinitionStatement
+	| assignStatement
+	| ifStatement
+	| whileStatement
+	| forStatement
+	| returnStatement
+	| breakStatement
+	| continueStatement
+    | funcStatement;
+
+assignStatement: (ID '=')+ expression ';';
+
+ifStatement:
+	'if' '(' expression ')' '{' statement* '}' elseifStatement* elseStatement?;
+
+elseifStatement:
+	'else' 'if' '(' expression ')' '{' statement* '}';
+
+elseStatement: 'else' '{' statement* '}';
+
+whileStatement:
+	'while' '(' expression ')' '{' statement* '}';
+
+forStatement:
+	'for' '(' forInitStatement ';' expression ';' forExecStatement ')' (
+		'{' statement* '}'
+		| ';'
+	);
+
+forInitStatement: ID '=' expression (',' forInitStatement)? |;
+
+forExecStatement: ID '=' expression (',' forExecStatement)? |;
+
+returnStatement:
+    'return' (INT | ID | DOUBLE | CHAR)? ';';
+
+breakStatement:
+    'break' ';';
+
+continueStatement:
+    'continue' ';';
+
+variableDefinitionStatement:
+	type ID ('=' expression)? (',' ID ('=' expression)?)* ';';
+
+funcStatement:
+    ID '(' paramsPattern ')';
+
+functionDeclaration:
+	type ID '(' paramsPattern ')' '{' statement* '}';
+
+paramsPattern: paramPattern (',' paramPattern)* |;
+
+paramPattern: type ID;
+
+expression:
+	'(' expression ')'
+	| '!' expression
+	| expression ('*' | '/' | '%') expression
+	| expression ('+' | '-') expression
+	| expression ('==' | '!=' | '>=' | '>' | '<' | '<=') expression
+	| expression '&&' expression
+	| expression '||' expression
+	| '-'? INT
+	| '-'? DOUBLE
+	| CHAR
+	| ID
+	| funcStatement;
+
+type: 'int' | 'double' | 'char';
+
+ID: [a-zA-Z_][0-9a-zA-Z_]*;
+DOUBLE: [0-9]+ '.' [0-9]+;
+CHAR: '\'' .'\'';
+INT: [0-9]+;
+LIB: [a-zA-Z]+ '.h'?;
