@@ -6,10 +6,15 @@ else:
     from c2llvmParser import c2llvmParser
 
 from c2llvmVisitor import c2llvmVisitor
+from llvmlite import ir
 
 # This class defines a complete generic visitor for a parse tree produced by c2llvmParser.
 
 class Visitor(c2llvmVisitor):
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.module = ir.Module()
 
     # Visit a parse tree produced by c2llvmParser#prog.
     def visitProg(self, ctx:c2llvmParser.ProgContext):
@@ -96,18 +101,28 @@ class Visitor(c2llvmVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by c2llvmParser#paramsInvokePattern.
+    def visitParamsInvokePattern(self, ctx:c2llvmParser.ParamsInvokePatternContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#paramInvokePattern.
+    def visitParamInvokePattern(self, ctx:c2llvmParser.ParamInvokePatternContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by c2llvmParser#functionDeclaration.
     def visitFunctionDeclaration(self, ctx:c2llvmParser.FunctionDeclarationContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by c2llvmParser#paramsPattern.
-    def visitParamsPattern(self, ctx:c2llvmParser.ParamsPatternContext):
+    # Visit a parse tree produced by c2llvmParser#paramsDefinitionPattern.
+    def visitParamsDefinitionPattern(self, ctx:c2llvmParser.ParamsDefinitionPatternContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by c2llvmParser#paramPattern.
-    def visitParamPattern(self, ctx:c2llvmParser.ParamPatternContext):
+    # Visit a parse tree produced by c2llvmParser#paramDefinitionPattern.
+    def visitParamDefinitionPattern(self, ctx:c2llvmParser.ParamDefinitionPatternContext):
         return self.visitChildren(ctx)
 
 

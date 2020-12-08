@@ -161,6 +161,24 @@ class c2llvmListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by c2llvmParser#paramsInvokePattern.
+    def enterParamsInvokePattern(self, ctx:c2llvmParser.ParamsInvokePatternContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#paramsInvokePattern.
+    def exitParamsInvokePattern(self, ctx:c2llvmParser.ParamsInvokePatternContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#paramInvokePattern.
+    def enterParamInvokePattern(self, ctx:c2llvmParser.ParamInvokePatternContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#paramInvokePattern.
+    def exitParamInvokePattern(self, ctx:c2llvmParser.ParamInvokePatternContext):
+        pass
+
+
     # Enter a parse tree produced by c2llvmParser#functionDeclaration.
     def enterFunctionDeclaration(self, ctx:c2llvmParser.FunctionDeclarationContext):
         pass
@@ -170,21 +188,21 @@ class c2llvmListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by c2llvmParser#paramsPattern.
-    def enterParamsPattern(self, ctx:c2llvmParser.ParamsPatternContext):
+    # Enter a parse tree produced by c2llvmParser#paramsDefinitionPattern.
+    def enterParamsDefinitionPattern(self, ctx:c2llvmParser.ParamsDefinitionPatternContext):
         pass
 
-    # Exit a parse tree produced by c2llvmParser#paramsPattern.
-    def exitParamsPattern(self, ctx:c2llvmParser.ParamsPatternContext):
+    # Exit a parse tree produced by c2llvmParser#paramsDefinitionPattern.
+    def exitParamsDefinitionPattern(self, ctx:c2llvmParser.ParamsDefinitionPatternContext):
         pass
 
 
-    # Enter a parse tree produced by c2llvmParser#paramPattern.
-    def enterParamPattern(self, ctx:c2llvmParser.ParamPatternContext):
+    # Enter a parse tree produced by c2llvmParser#paramDefinitionPattern.
+    def enterParamDefinitionPattern(self, ctx:c2llvmParser.ParamDefinitionPatternContext):
         pass
 
-    # Exit a parse tree produced by c2llvmParser#paramPattern.
-    def exitParamPattern(self, ctx:c2llvmParser.ParamPatternContext):
+    # Exit a parse tree produced by c2llvmParser#paramDefinitionPattern.
+    def exitParamDefinitionPattern(self, ctx:c2llvmParser.ParamDefinitionPatternContext):
         pass
 
 
