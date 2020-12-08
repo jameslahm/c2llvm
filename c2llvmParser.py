@@ -1765,6 +1765,7 @@ class c2llvmParser ( Parser ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
+            self.op = None # Token
 
         def expression(self, i:int=None):
             if i is None:
@@ -1832,7 +1833,7 @@ class c2llvmParser ( Parser ):
 
             elif la_ == 2:
                 self.state = 250
-                self.match(c2llvmParser.T__17)
+                localctx.op = self.match(c2llvmParser.T__17)
                 self.state = 251
                 self.expression(11)
                 pass
@@ -1843,7 +1844,7 @@ class c2llvmParser ( Parser ):
                 _la = self._input.LA(1)
                 if _la==c2llvmParser.T__22:
                     self.state = 252
-                    self.match(c2llvmParser.T__22)
+                    localctx.op = self.match(c2llvmParser.T__22)
 
 
                 self.state = 255
@@ -1856,7 +1857,7 @@ class c2llvmParser ( Parser ):
                 _la = self._input.LA(1)
                 if _la==c2llvmParser.T__22:
                     self.state = 256
-                    self.match(c2llvmParser.T__22)
+                    localctx.op = self.match(c2llvmParser.T__22)
 
 
                 self.state = 259
@@ -1899,9 +1900,10 @@ class c2llvmParser ( Parser ):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 10)")
                         self.state = 266
+                        localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
                         if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << c2llvmParser.T__18) | (1 << c2llvmParser.T__19) | (1 << c2llvmParser.T__20))) != 0)):
-                            self._errHandler.recoverInline(self)
+                            localctx.op = self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
@@ -1917,9 +1919,10 @@ class c2llvmParser ( Parser ):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 9)")
                         self.state = 269
+                        localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
                         if not(_la==c2llvmParser.T__21 or _la==c2llvmParser.T__22):
-                            self._errHandler.recoverInline(self)
+                            localctx.op = self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
@@ -1935,9 +1938,10 @@ class c2llvmParser ( Parser ):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 8)")
                         self.state = 272
+                        localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
                         if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << c2llvmParser.T__1) | (1 << c2llvmParser.T__2) | (1 << c2llvmParser.T__23) | (1 << c2llvmParser.T__24) | (1 << c2llvmParser.T__25) | (1 << c2llvmParser.T__26))) != 0)):
-                            self._errHandler.recoverInline(self)
+                            localctx.op = self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()

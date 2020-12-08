@@ -64,14 +64,14 @@ paramPattern: vType ID;
 
 expression:
 	'(' expression ')'
-	| '!' expression
-	| expression ('*' | '/' | '%') expression
-	| expression ('+' | '-') expression
-	| expression ('==' | '!=' | '>=' | '>' | '<' | '<=') expression
+	| op='!' expression
+	| expression op=('*' | '/' | '%') expression
+	| expression op=('+' | '-') expression
+	| expression op=('==' | '!=' | '>=' | '>' | '<' | '<=') expression
 	| expression '&&' expression
 	| expression '||' expression
-	| '-'? INT
-	| '-'? DOUBLE
+	| (op='-')? INT
+	| (op='-')? DOUBLE
 	| CHAR
 	| ID
 	| funcStatement;
