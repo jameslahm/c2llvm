@@ -77,7 +77,7 @@ expression:
 	| ID
 	| funcStatement;
 
-vType: 'int' | 'double' | 'char';
+vType: 'int' | 'double' | 'char' | 'void';
 
 ID: [a-zA-Z_][0-9a-zA-Z_]*;
 DOUBLE: [0-9]+ '.' [0-9]+;
