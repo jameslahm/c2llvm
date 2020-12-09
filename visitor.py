@@ -35,6 +35,8 @@ class Visitor(c2llvmVisitor):
         self.local_vars = []
         self.current_func = ''
 
+        self.global_vars = {}
+
 
     # Visit a parse tree produced by c2llvmParser#prog.
     def visitProg(self, ctx:c2llvmParser.ProgContext):
@@ -116,6 +118,31 @@ class Visitor(c2llvmVisitor):
     def visitVariableDefinitionStatement(self, ctx:c2llvmParser.VariableDefinitionStatementContext):
         if (len(self.blocks)==0):
             v_type = self.visit(ctx.getChild(0))
+
+            index = 1
+            total = ctx.getChildCount()
+
+            while(index<total):
+                v_name = ctx.getChild(index).getText()
+                self.insert_symbol_table(v_name)
+
+                tmp_var = ir.GlobalVariable(self.module,v_type,name=v_name)
+                tmp_var.linkage = 'common'
+
+                self.global_vars[v_name] = {
+                    'type':v_type,
+                    'name':tmp_var
+                }
+
+                has_assign = (ctx.getChild(index+1).getText()=='=')
+
+                if has_assign:
+                    self.visit(ctx.getChild(index+2))
+                    
+                else:
+                    index+=2
+                
+
             
 
 

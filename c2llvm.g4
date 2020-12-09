@@ -51,38 +51,41 @@ variableDefinitionStatement:
 funcStatement: ID '(' paramsInvokePattern ')' ';';
 
 paramsInvokePattern:
-    paramInvokePattern (',' paramInvokePattern) *|;
+	paramInvokePattern (',' paramInvokePattern)*
+	|;
 
-paramInvokePattern:
-    ID | CHAR | INT | DOUBLE | STRING;
+paramInvokePattern: ID | CHAR | INT | DOUBLE | STRING;
 
 functionDeclaration:
 	vType ID '(' paramsDefinitionPattern ')' '{' statement* '}';
 
-paramsDefinitionPattern: paramDefinitionPattern (',' paramDefinitionPattern)* |;
+paramsDefinitionPattern:
+	paramDefinitionPattern (',' paramDefinitionPattern)*
+	|;
 
 paramDefinitionPattern: vType ID;
 
 expression:
-	'(' expression ')'
-	| op = '!' expression
-	| expression op = ('*' | '/' | '%') expression
-	| expression op = ('+' | '-') expression
-	| expression op = ('==' | '!=' | '>=' | '>' | '<' | '<=') expression
-	| expression '&&' expression
-	| expression '||' expression
-	| (op = '-')? INT
-	| (op = '-')? DOUBLE
-	| CHAR
-	| ID
-	| funcStatement;
+	'(' expression ')' #Parens
+	| op = '!' expression #Neg
+	| expression op = ('*' | '/' | '%') expression #MulDivMod
+	| expression op = ('+' | '-') expression #AndSub
+	| expression op = ('==' | '!=' | '>=' | '>' | '<' | '<=') expression #Compare
+	| expression '&&' expression #And
+	| expression '||' expression #Or
+	| (op = '-')? INT #Int
+	| (op = '-')? DOUBLE #Double
+	| CHAR #Char
+	| ID #Id
+	| ID '(' paramsInvokePattern ')' #FunctionExpr
+	;
 
 vType: 'int' | 'double' | 'char' | 'void';
 
 ID: [a-zA-Z_][0-9a-zA-Z_]*;
 DOUBLE: [0-9]+ '.' [0-9]+;
 CHAR: '\'' .'\'';
-STRING : '"'.*?'"';
+STRING: '"' .*? '"';
 INT: [0-9]+;
 LIB: [a-zA-Z]+ '.h'?;
 Conjunction: '&&' | '||';
