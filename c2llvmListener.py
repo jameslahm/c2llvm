@@ -35,6 +35,24 @@ class c2llvmListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by c2llvmParser#structDeclaration.
+    def enterStructDeclaration(self, ctx:c2llvmParser.StructDeclarationContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#structDeclaration.
+    def exitStructDeclaration(self, ctx:c2llvmParser.StructDeclarationContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#structMemberDeclaration.
+    def enterStructMemberDeclaration(self, ctx:c2llvmParser.StructMemberDeclarationContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#structMemberDeclaration.
+    def exitStructMemberDeclaration(self, ctx:c2llvmParser.StructMemberDeclarationContext):
+        pass
+
+
     # Enter a parse tree produced by c2llvmParser#statement.
     def enterStatement(self, ctx:c2llvmParser.StatementContext):
         pass
@@ -149,6 +167,42 @@ class c2llvmListener(ParseTreeListener):
 
     # Exit a parse tree produced by c2llvmParser#variableDefinitionStatement.
     def exitVariableDefinitionStatement(self, ctx:c2llvmParser.VariableDefinitionStatementContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#arrayDefinitionStatement.
+    def enterArrayDefinitionStatement(self, ctx:c2llvmParser.ArrayDefinitionStatementContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#arrayDefinitionStatement.
+    def exitArrayDefinitionStatement(self, ctx:c2llvmParser.ArrayDefinitionStatementContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#structDefinitionStatement.
+    def enterStructDefinitionStatement(self, ctx:c2llvmParser.StructDefinitionStatementContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#structDefinitionStatement.
+    def exitStructDefinitionStatement(self, ctx:c2llvmParser.StructDefinitionStatementContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#vArrayItem.
+    def enterVArrayItem(self, ctx:c2llvmParser.VArrayItemContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#vArrayItem.
+    def exitVArrayItem(self, ctx:c2llvmParser.VArrayItemContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#vStructMember.
+    def enterVStructMember(self, ctx:c2llvmParser.VStructMemberContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#vStructMember.
+    def exitVStructMember(self, ctx:c2llvmParser.VStructMemberContext):
         pass
 
 
@@ -365,6 +419,24 @@ class c2llvmListener(ParseTreeListener):
 
     # Exit a parse tree produced by c2llvmParser#vId.
     def exitVId(self, ctx:c2llvmParser.VIdContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#vStruct.
+    def enterVStruct(self, ctx:c2llvmParser.VStructContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#vStruct.
+    def exitVStruct(self, ctx:c2llvmParser.VStructContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#vArray.
+    def enterVArray(self, ctx:c2llvmParser.VArrayContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#vArray.
+    def exitVArray(self, ctx:c2llvmParser.VArrayContext):
         pass
 
 

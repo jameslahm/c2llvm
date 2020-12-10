@@ -24,6 +24,16 @@ class c2llvmVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by c2llvmParser#structDeclaration.
+    def visitStructDeclaration(self, ctx:c2llvmParser.StructDeclarationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#structMemberDeclaration.
+    def visitStructMemberDeclaration(self, ctx:c2llvmParser.StructMemberDeclarationContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by c2llvmParser#statement.
     def visitStatement(self, ctx:c2llvmParser.StatementContext):
         return self.visitChildren(ctx)
@@ -86,6 +96,26 @@ class c2llvmVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by c2llvmParser#variableDefinitionStatement.
     def visitVariableDefinitionStatement(self, ctx:c2llvmParser.VariableDefinitionStatementContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#arrayDefinitionStatement.
+    def visitArrayDefinitionStatement(self, ctx:c2llvmParser.ArrayDefinitionStatementContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#structDefinitionStatement.
+    def visitStructDefinitionStatement(self, ctx:c2llvmParser.StructDefinitionStatementContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#vArrayItem.
+    def visitVArrayItem(self, ctx:c2llvmParser.VArrayItemContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#vStructMember.
+    def visitVStructMember(self, ctx:c2llvmParser.VStructMemberContext):
         return self.visitChildren(ctx)
 
 
@@ -206,6 +236,16 @@ class c2llvmVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by c2llvmParser#vId.
     def visitVId(self, ctx:c2llvmParser.VIdContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#vStruct.
+    def visitVStruct(self, ctx:c2llvmParser.VStructContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#vArray.
+    def visitVArray(self, ctx:c2llvmParser.VArrayContext):
         return self.visitChildren(ctx)
 
 
