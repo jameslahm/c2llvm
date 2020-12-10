@@ -18,6 +18,7 @@ from llvmlite import ir
 double = ir.DoubleType()
 int32 = ir.IntType(32)
 int8 = ir.IntType(8)
+int1 = ir.IntType(1)
 void = ir.VoidType()
 
 class Visitor(c2llvmVisitor):
@@ -42,6 +43,8 @@ class Visitor(c2llvmVisitor):
         self.need_load = True
 
         self.structures  = dict()
+
+        self.end_condition_block = None
 
 
     # Visit a parse tree produced by c2llvmParser#prog.
@@ -139,22 +142,119 @@ class Visitor(c2llvmVisitor):
 
      # Visit a parse tree produced by c2llvmParser#conditionStatement.
     def visitConditionStatement(self, ctx:c2llvmParser.ConditionStatementContext):
-        return self.visitChildren(ctx)
+        builder = self.builders[-1]
+
+        condition_block = builder.append_basic_block()
+        end_condition_block = builder.append_basic_block()
+        builder.branch(condition_block)
+
+        self.blocks.pop()
+        self.builders.pop()
+        self.blocks.append(condition_block)
+
+        builder = ir.IRBuilder(condition_block)
+        self.builders.append(builder)
+
+        end_condition_block_backup = self.end_condition_block
+        self.end_condition_block = end_condition_block
+        
+        self.visitChildren(ctx)
+
+        self.end_condition_block = end_condition_block_backup
+
+        block = self.blocks.pop()
+        builder = self.builders.pop()
+
+        if not block.is_terminated:
+            builder.branch(end_condition_block)
+        
+        self.blocks.append(end_condition_block)
+        self.builders.append(ir.IRBuilder(end_condition_block))
+
+        return
     
     # Visit a parse tree produced by c2llvmParser#ifStatement.
     def visitIfStatement(self, ctx:c2llvmParser.IfStatementContext):
+        self.enter_scope()
+        res = self.visit(ctx.getChild(2))
         builder = self.builders[-1]
+
+        if_true_block = builder.append_basic_block()
+        if_false_block = builder.append_basic_block()
+        builder.cbranch(res['name'],if_true_block,if_false_block)
+
+        self.blocks.pop()
+        self.builders.pop()
+
+        self.blocks.append(if_true_block)
+        self.builders.append(ir.IRBuilder(if_true_block))
+        self.local_vars.append({})
         
+        for index in range(5,ctx.getChildCount()-1):
+            self.visit(ctx.getChild(index))
+        
+        if not self.blocks[-1].is_terminated:
+            builder = self.builders[-1]
+            builder.branch(self.end_condition_block)
+        
+        self.blocks.pop()
+        self.builders.pop()
+        self.local_vars.pop()
+
+        self.blocks.append(if_false_block)
+        self.builders.append(ir.IRBuilder(if_false_block))
+        self.leave_scope()
+        return
+
 
 
     # Visit a parse tree produced by c2llvmParser#elseifStatement.
     def visitElseifStatement(self, ctx:c2llvmParser.ElseifStatementContext):
-        return self.visitChildren(ctx)
+        self.enter_scope()
+        res = self.visit(ctx.getChild(3))
+        builder = self.builders[-1]
+
+        elseif_true_block = builder.append_basic_block()
+        elseif_false_block = builder.append_basic_block()
+
+        builder.cbranch(res['name'],elseif_true_block,elseif_false_block)
+
+        self.blocks.pop()
+        self.builders.pop()
+
+        self.blocks.append(elseif_true_block)
+        self.builders.append(ir.IRBuilder(elseif_true_block))
+        self.local_vars.append({})
+
+        for index in range(6,ctx.getChildCount()-1):
+            self.visit(ctx.getChild(index))
+        
+        if not self.blocks[-1].is_terminated:
+            builder=self.builders[-1]
+            builder.branch(self.end_condition_block)
+        
+        self.blocks.pop()
+        self.builders.pop()
+        self.local_vars.pop()
+
+        self.blocks.append(elseif_false_block)
+        self.builders.append(ir.IRBuilder(elseif_false_block))
+        self.leave_scope()
+        return
+
 
 
     # Visit a parse tree produced by c2llvmParser#elseStatement.
     def visitElseStatement(self, ctx:c2llvmParser.ElseStatementContext):
-        return self.visitChildren(ctx)
+        self.enter_scope()
+        self.local_vars.append({})
+
+        for index in range(2,ctx.getChildCount()-1):
+            self.visit(ctx.getChild(index))
+        
+        self.local_vars.pop()
+        self.leave_scope()
+        return
 
 
     # Visit a parse tree produced by c2llvmParser#whileStatement.
@@ -797,14 +897,14 @@ class Visitor(c2llvmVisitor):
         if res['type'] == int8 or res['type']==int32:
             tmp_var = builder.icmp_signed(op,res['name'],ir.Constant(res['type'],0))
             return {
-                'type': int8,
+                'type': int1,
                 'constant':False,
                 'name':tmp_var
             }
         elif res['type']==double:
             tmp_var = builder.fcmp_ordered(op,res['name'],ir.Constant(res['type'],0))
             return {
-                'type':int8,
+                'type':int1,
                 'constant':False,
                 'name':tmp_var
             }
