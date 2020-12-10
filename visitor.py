@@ -1,6 +1,7 @@
 # Generated from c2llvm.g4 by ANTLR 4.9
 from typing import Dict, List
 from antlr4 import *
+from llvmlite.ir import builder
 from llvmlite.ir.builder import IRBuilder
 from llvmlite.ir.values import Block, Function
 if __name__ is not None and "." in __name__:
@@ -138,7 +139,7 @@ class Visitor(c2llvmVisitor):
 
                 if has_assign:
                     self.visit(ctx.getChild(index+2))
-                    
+
                 else:
                     index+=2
                 
@@ -232,6 +233,8 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#Neg.
     def visitNeg(self, ctx:c2llvmParser.NegContext):
+        res = self.visit(ctx.getChild(1))
+        res = self.toBool(res)
         return self.visitChildren(ctx)
 
 
@@ -247,7 +250,18 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#Or.
     def visitOr(self, ctx:c2llvmParser.OrContext):
-        return self.visitChildren(ctx)
+        lres = self.visit(ctx.getChild(0))
+        lres = self.toBool(lres)
+        rres = self.visit(ctx.getChild(2))
+        rres = self.toBool(rres)
+        builder = self.builders[-1]
+        res = builder.or_(lres['name'],rres['name'])
+        
+        return {
+            'type':lres['type'],
+            'const':False,
+            'name':res
+        }
 
 
     # Visit a parse tree produced by c2llvmParser#Parens.
@@ -262,7 +276,18 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#And.
     def visitAnd(self, ctx:c2llvmParser.AndContext):
-        return self.visitChildren(ctx)
+        lres = self.visit(ctx.getChild(0))
+        lres = self.toBool(lres)
+        rres = self.visit(ctx.getChild(2))
+        rres = self.toBool(rres)
+        builder = self.builders[-1]
+
+        res = builder.and_(lres['name'],rres['name'])
+        return {
+            'type':lres['type'],
+            'const':False,
+            'name':res
+        }
 
 
     # Visit a parse tree produced by c2llvmParser#Compare.
@@ -272,7 +297,7 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#Id.
     def visitId(self, ctx:c2llvmParser.IdContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.getChild(0))
 
 
     # Visit a parse tree produced by c2llvmParser#Double.
@@ -326,5 +351,29 @@ class Visitor(c2llvmVisitor):
             print("Redefinition Error: {}".format(v_name))
         else:
             self.symbol_table[v_name].append(self.scope)
+    
+    def toBool(self,res,flag = 0):
+        op = '=='
+        if flag:
+            op = '!='
+        
+        builder = self.builders[-1]
+        if res['type'] == int8 or res['type']==int32:
+            tmp_var = builder.icmp_signed(op,res['name'],ir.Constant(res['type'],0))
+            return {
+                'type': int8,
+                'constant':False,
+                'name':tmp_var
+            }
+        elif res['type']==double:
+            tmp_var = builder.fcmp_ordered(op,res['name'],ir.Constant(res['type'],0))
+            return {
+                'type':int8,
+                'constant':False,
+                'name':tmp_var
+            }
+        else:
+            print("toBool Error")
+            return res
 
 del c2llvmParser

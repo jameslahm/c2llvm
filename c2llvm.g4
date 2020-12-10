@@ -17,7 +17,7 @@ statement:
 	| continueStatement
 	| funcStatement;
 
-assignStatement: (ID '=')+ expression ';';
+assignStatement: (vId '=')+ expression ';';
 
 ifStatement:
 	'if' '(' expression ')' '{' statement* '}' elseifStatement* elseStatement?;
@@ -35,35 +35,35 @@ forStatement:
 		| ';'
 	);
 
-forInitStatement: ID '=' expression (',' forInitStatement)? |;
+forInitStatement: vId '=' expression (',' forInitStatement)? |;
 
-forExecStatement: ID '=' expression (',' forExecStatement)? |;
+forExecStatement: vId '=' expression (',' forExecStatement)? |;
 
-returnStatement: 'return' (INT | ID | DOUBLE | CHAR)? ';';
+returnStatement: 'return' (vInt | vId | vDouble | vChar)? ';';
 
 breakStatement: 'break' ';';
 
 continueStatement: 'continue' ';';
 
 variableDefinitionStatement:
-	vType ID ('=' expression)? (',' ID ('=' expression)?)* ';';
+	vType vId ('=' expression)? (',' vId ('=' expression)?)* ';';
 
-funcStatement: ID '(' paramsInvokePattern ')' ';';
+funcStatement: vId '(' paramsInvokePattern ')' ';';
 
 paramsInvokePattern:
 	paramInvokePattern (',' paramInvokePattern)*
 	|;
 
-paramInvokePattern: ID | CHAR | INT | DOUBLE | STRING;
+paramInvokePattern: vId | vChar | vInt | vDouble | vString;
 
 functionDeclaration:
-	vType ID '(' paramsDefinitionPattern ')' '{' statement* '}';
+	vType vId '(' paramsDefinitionPattern ')' '{' statement* '}';
 
 paramsDefinitionPattern:
 	paramDefinitionPattern (',' paramDefinitionPattern)*
 	|;
 
-paramDefinitionPattern: vType ID;
+paramDefinitionPattern: vType vId;
 
 expression:
 	'(' expression ')' #Parens
@@ -73,14 +73,20 @@ expression:
 	| expression op = ('==' | '!=' | '>=' | '>' | '<' | '<=') expression #Compare
 	| expression '&&' expression #And
 	| expression '||' expression #Or
-	| (op = '-')? INT #Int
-	| (op = '-')? DOUBLE #Double
-	| CHAR #Char
-	| ID #Id
-	| ID '(' paramsInvokePattern ')' #FunctionExpr
+	| (op = '-')? vInt #Int
+	| (op = '-')? vDouble #Double
+	| vChar #Char
+	| vId #Id
+	| vId '(' paramsInvokePattern ')' #FunctionExpr
 	;
 
 vType: 'int' | 'double' | 'char' | 'void';
+vInt: INT;
+vChar:CHAR;
+vDouble:DOUBLE;
+vString:STRING;
+vId:ID;
+
 
 ID: [a-zA-Z_][0-9a-zA-Z_]*;
 DOUBLE: [0-9]+ '.' [0-9]+;
