@@ -137,6 +137,10 @@ class Visitor(c2llvmVisitor):
         return res
 
 
+     # Visit a parse tree produced by c2llvmParser#conditionStatement.
+    def visitConditionStatement(self, ctx:c2llvmParser.ConditionStatementContext):
+        return self.visitChildren(ctx)
+    
     # Visit a parse tree produced by c2llvmParser#ifStatement.
     def visitIfStatement(self, ctx:c2llvmParser.IfStatementContext):
         builder = self.builders[-1]

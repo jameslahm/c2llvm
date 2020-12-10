@@ -71,6 +71,15 @@ class c2llvmListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by c2llvmParser#conditionStatement.
+    def enterConditionStatement(self, ctx:c2llvmParser.ConditionStatementContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#conditionStatement.
+    def exitConditionStatement(self, ctx:c2llvmParser.ConditionStatementContext):
+        pass
+
+
     # Enter a parse tree produced by c2llvmParser#ifStatement.
     def enterIfStatement(self, ctx:c2llvmParser.IfStatementContext):
         pass

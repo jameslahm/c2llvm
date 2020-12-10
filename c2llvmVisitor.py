@@ -44,6 +44,11 @@ class c2llvmVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by c2llvmParser#conditionStatement.
+    def visitConditionStatement(self, ctx:c2llvmParser.ConditionStatementContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by c2llvmParser#ifStatement.
     def visitIfStatement(self, ctx:c2llvmParser.IfStatementContext):
         return self.visitChildren(ctx)
