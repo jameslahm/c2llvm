@@ -409,17 +409,30 @@ class Visitor(c2llvmVisitor):
 
         # Visit a parse tree produced by c2llvmParser#vInt.
     def visitVInt(self, ctx:c2llvmParser.VIntContext):
-        return self.visitChildren(ctx)
+        return {
+            'type':int32,
+            'const':True,
+            'name':ir.Constant(int32,int(ctx.getText()))
+        }
+        
 
 
     # Visit a parse tree produced by c2llvmParser#vChar.
     def visitVChar(self, ctx:c2llvmParser.VCharContext):
-        return self.visitChildren(ctx)
+        return {
+            'type':int8,
+            'const':True,
+            'name':ir.Constant(int8,ord(ctx.getText()[1]))
+        }
 
 
     # Visit a parse tree produced by c2llvmParser#vDouble.
     def visitVDouble(self, ctx:c2llvmParser.VDoubleContext):
-        return self.visitChildren(ctx)
+        return {
+            'type':double,
+            'const':True,
+            'name':ir.Constant(double,float(ctx.getText()))
+        }
 
 
     # Visit a parse tree produced by c2llvmParser#vString.
@@ -429,7 +442,16 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#vId.
     def visitVId(self, ctx:c2llvmParser.VIdContext):
-        return self.visitChildren(ctx)
+        v_name = ctx.getText()
+        if not self.check_var_define(v_name):
+            return {
+                'type':int32,
+                'const':False,
+                'name':ir.Constant(int32,0)
+            }
+        builder = self.builders[-1]
+        
+
 
     def enter_scope(self):
         self.scope += 1
@@ -451,6 +473,15 @@ class Visitor(c2llvmVisitor):
             print("Redefinition Error: {}".format(v_name))
         else:
             self.symbol_table[v_name].append(self.scope)
+    
+    def check_var_define(self,v_name):
+        if not v_name in self.symbol_table:
+            print("Check Var Define Error")
+            return False,
+        if self.symbol_table[v_name][0]< self.scope:
+            print("Check Var Define Error")
+            return False
+        return True
     
     def toBool(self,res,flag = 0):
         op = '=='

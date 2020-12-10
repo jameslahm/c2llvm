@@ -4,10 +4,20 @@ prog: (include)* (declaration | statement)*;
 
 include: '#include' '<' LIB '>';
 
-declaration: functionDeclaration;
+declaration: functionDeclaration | structDeclaration;
+
+structDeclaration:
+	vStruct '{' (structMemberDeclaration)+ '}' ';';
+
+structMemberDeclaration:
+	(vType | vStruct) (vId | vArray) (',' (vId | vArray))* ';';
+
+
 
 statement:
 	variableDefinitionStatement
+	| arrayDefinitionStatement
+	| structDefinitionStatement
 	| assignStatement
 	| ifStatement
 	| whileStatement
@@ -17,7 +27,7 @@ statement:
 	| continueStatement
 	| funcStatement;
 
-assignStatement: (vId '=')+ expression ';';
+assignStatement: ((vId | vArrayItem | vStructMember) '=')+ expression ';';
 
 ifStatement:
 	'if' '(' expression ')' '{' statement* '}' elseifStatement* elseStatement?;
@@ -47,6 +57,18 @@ continueStatement: 'continue' ';';
 
 variableDefinitionStatement:
 	vType vId ('=' expression)? (',' vId ('=' expression)?)* ';';
+
+arrayDefinitionStatement:
+	vType vId '[' vInt ']' ';';
+
+structDefinitionStatement:
+	vStruct (vId | vArray) ';';
+
+vArrayItem: 
+	vId '[' expression ']';
+
+vStructMember:
+	(vId | vArrayItem) '.' (vId | vArrayItem);
 
 funcStatement: vId '(' paramsInvokePattern ')' ';';
 
@@ -86,6 +108,8 @@ vChar:CHAR;
 vDouble:DOUBLE;
 vString:STRING;
 vId:ID;
+vStruct: 'struct' vId;
+vArray: vId '[' vInt ']';
 
 
 ID: [a-zA-Z_][0-9a-zA-Z_]*;
