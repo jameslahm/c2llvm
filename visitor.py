@@ -1,5 +1,6 @@
 # Generated from c2llvm.g4 by ANTLR 4.9
 from io import BufferedRandom
+from os import name
 from typing import Dict, List
 from antlr4 import *
 from llvmlite.ir import builder
@@ -40,6 +41,10 @@ class Visitor(c2llvmVisitor):
 
         self.global_vars = {}
 
+        self.need_load = True
+
+        self.structures  = dict()
+
 
     # Visit a parse tree produced by c2llvmParser#prog.
     def visitProg(self, ctx:c2llvmParser.ProgContext):
@@ -59,12 +64,33 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#structDeclaration.
     def visitStructDeclaration(self, ctx:c2llvmParser.StructDeclarationContext):
-        return self.visitChildren(ctx)
+        self.enter_scope()
+
+        struct_name = ctx.getChild(0).getChild(1).getText()
+        if struct_name in self.structures:
+            print("Struct Declaration Error")
+            return
+        
+        member_types = []
+        member_names = []
+        for index in range(2,len(ctx.getChildCount())-2):
+            v_types,v_names = self.visit(ctx.getChild(index))
+            member_types.extend(v_types)
+            member_names.extend(v_names)
+        
+        self.structures[struct_name]={
+            'members':member_names,
+            'struct':ir.LiteralStructType(member_types)
+        }
+        self.leave_scope()
 
 
     # Visit a parse tree produced by c2llvmParser#structMemberDeclaration.
     def visitStructMemberDeclaration(self, ctx:c2llvmParser.StructMemberDeclarationContext):
         return self.visitChildren(ctx)
+
+
+        
     # Visit a parse tree produced by c2llvmParser#statement.
     def visitStatement(self, ctx:c2llvmParser.StatementContext):
         return self.visitChildren(ctx)
@@ -476,6 +502,46 @@ class Visitor(c2llvmVisitor):
                 'name':ir.Constant(int32,0)
             }
         builder = self.builders[-1]
+
+        for local_var_list in self.local_vars.reverse():
+            if v_name in local_var_list:
+                if self.need_load:
+                    tmp_var = builder.load(local_var_list[v_name]['name'])
+                    return {
+                        'type':local_var_list[v_name]['type'],
+                        'const':False,
+                        'name':tmp_var,
+                        'struct_name': local_var_list[v_name]['struct_name'] if 'struct_name' in local_var_list[v_name] else None
+                    }
+                else:
+                    return {
+                        'type':local_var_list[v_name]['type'],
+                        'const':False,
+                        'name':local_var_list[v_name]['name'],
+                        'struct_name': local_var_list[v_name]['struct_name'] if 'struct_name' in local_var_list[v_name] else None
+                    }
+
+        if v_name in self.global_vars:
+            if self.need_load:
+                tmp_var = builder.load(self.global_vars[v_name]['name'])  
+                return {
+                    'type':self.global_vars[v_name]['type'],
+                    'const':False,
+                    'name':tmp_var,
+                    'struct_name':self.global_vars[v_name]['struct_name'] if 'struct_name' in self.global_vars[v_name] else None
+                }
+            else:
+                return {
+                    'type':self.global_vars[v_name]['type'],
+                    'const':False,
+                    'name':self.global_vars[v_name]['name'],
+                    'struct_name':self.global_vars[v_name]['struct_name'] if 'struct_name' in self.global_vars[v_name] else None
+                }
+        return {
+            'type':void,
+            'const':False,
+            'name':ir.Constant(void,None)
+        }
 
     # Visit a parse tree produced by c2llvmParser#vStruct.
     def visitVStruct(self, ctx:c2llvmParser.VStructContext):
