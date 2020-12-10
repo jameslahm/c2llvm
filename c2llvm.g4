@@ -69,7 +69,7 @@ expression:
 	'(' expression ')' #Parens
 	| op = '!' expression #Neg
 	| expression op = ('*' | '/' | '%') expression #MulDivMod
-	| expression op = ('+' | '-') expression #AndSub
+	| expression op = ('+' | '-') expression #AddSub
 	| expression op = ('==' | '!=' | '>=' | '>' | '<' | '<=') expression #Compare
 	| expression '&&' expression #And
 	| expression '||' expression #Or

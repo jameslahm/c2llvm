@@ -1,8 +1,10 @@
 # Generated from c2llvm.g4 by ANTLR 4.9
+from io import BufferedRandom
 from typing import Dict, List
 from antlr4 import *
 from llvmlite.ir import builder
 from llvmlite.ir.builder import IRBuilder
+from llvmlite.ir.instructions import SelectInstr
 from llvmlite.ir.values import Block, Function
 if __name__ is not None and "." in __name__:
     from .c2llvmParser import c2llvmParser
@@ -240,7 +242,27 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#MulDivMod.
     def visitMulDivMod(self, ctx:c2llvmParser.MulDivModContext):
-        return self.visitChildren(ctx)
+        builder = self.builders[-1]
+        lres = self.visit(ctx.getChild(0))
+        rres = self.visit(ctx.getChild(2))
+
+        lres,rres = self.convertToSameType(lres,rres)
+
+        tmp_var =None
+
+        if ctx.getChild(1).getText() == '*':
+            tmp_var = builder.mul(lres['name'],rres['name'])
+        elif ctx.getChild(1).getText() == '/':
+            tmp_var = builder.sdiv(lres['name'],rres['name'])
+        elif ctx.getChild(1).getText() =='%':
+            tmp_var  = builder.srem(lres['name'],rres['name'])
+        else:
+            print("MulDivMod Error")
+        return {
+            'type':lres['type'],
+            'const':False,
+            'name':tmp_var
+        }
 
 
     # Visit a parse tree produced by c2llvmParser#FunctionExpr.
@@ -266,12 +288,12 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#Parens.
     def visitParens(self, ctx:c2llvmParser.ParensContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.getChild(1))
 
 
     # Visit a parse tree produced by c2llvmParser#Char.
     def visitChar(self, ctx:c2llvmParser.CharContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.getChild(0))
 
 
     # Visit a parse tree produced by c2llvmParser#And.
@@ -292,7 +314,28 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#Compare.
     def visitCompare(self, ctx:c2llvmParser.CompareContext):
-        return self.visitChildren(ctx)
+        builder = self.builders[-1]
+        lres = self.visit(ctx.getChild(0))
+        rres = self.visit(ctx.getChild(2))
+
+        lres,rres = self.convertToSameType(lres,rres)
+        op = ctx.getChild(1).getText()
+
+        tmp_var = None
+
+        if lres['type'] == double:
+            tmp_var = builder.fcmp_ordered(op,lres['name'],rres['name'])
+        elif self.isInteger(lres):
+            tmp_var  = builder.icmp_signed(op,lres['name'],rres['name'])
+        else:
+            print("Compare Error")
+        return {
+            'type':int8,
+            'const':False,
+            'name':tmp_var
+        }
+
+
 
 
     # Visit a parse tree produced by c2llvmParser#Id.
@@ -302,17 +345,51 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#Double.
     def visitDouble(self, ctx:c2llvmParser.DoubleContext):
-        return self.visitChildren(ctx)
+        if ctx.getChild(0).getText() == '-':
+            res = self.visit(ctx.getChild(1))
+            builder = self.builders[-1]
+            tmp_var = builder.neg(res['name'])
+            return {
+                'type':res['type'],
+                'name':tmp_var
+            }
+        return self.visit(ctx.getChild(0))
 
 
     # Visit a parse tree produced by c2llvmParser#Int.
     def visitInt(self, ctx:c2llvmParser.IntContext):
-        return self.visitChildren(ctx)
+        if ctx.getChild(0).getText() == '-':
+            res = self.visit(ctx.getChild(1))
+            builder = self.builders[-1]
+            tmp_var = builder.neg(res['name'])
+            return {
+                'type':res['type'],
+                'name':tmp_var
+            }
+        return self.visit(ctx.getChild(0))
 
 
     # Visit a parse tree produced by c2llvmParser#AndSub.
-    def visitAndSub(self, ctx:c2llvmParser.AndSubContext):
-        return self.visitChildren(ctx)
+    def visitAddSub(self, ctx:c2llvmParser.AddSubContext):
+        builder = self.builders[-1]
+        lres = self.visit(ctx.getChild(0))
+        rres = self.visit(ctx.getChild(2))
+
+        lres,rres = self.convertToSameType(lres,rres)
+
+        tmp_var =None
+
+        if ctx.getChild(1).getText() == '+':
+            tmp_var =builder.add(lres['name'],rres['name'])
+        elif ctx.getChild(1).getText() =='-':
+            tmp_var = builder.sub(lres['name'],rres['name'])
+        else:
+            print("AddSub Error")
+        return {
+            'type':lres['type'],
+            'const':False,
+            'name':tmp_var
+        }
 
 
     # Visit a parse tree produced by c2llvmParser#vType.
@@ -330,6 +407,29 @@ class Visitor(c2llvmVisitor):
             print("VType Error")
             return void
 
+        # Visit a parse tree produced by c2llvmParser#vInt.
+    def visitVInt(self, ctx:c2llvmParser.VIntContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#vChar.
+    def visitVChar(self, ctx:c2llvmParser.VCharContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#vDouble.
+    def visitVDouble(self, ctx:c2llvmParser.VDoubleContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#vString.
+    def visitVString(self, ctx:c2llvmParser.VStringContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#vId.
+    def visitVId(self, ctx:c2llvmParser.VIdContext):
+        return self.visitChildren(ctx)
 
     def enter_scope(self):
         self.scope += 1
@@ -375,5 +475,50 @@ class Visitor(c2llvmVisitor):
         else:
             print("toBool Error")
             return res
+    
+    def isInteger(self,res):
+        return res['type'] == int32 or res['type']==int8
+
+    def isDouble(self,res):
+        return res['type'] == double
+
+    def convertToType(self,res,dtype):
+        builder = self.builders[-1]
+
+        if dtype == int32 or dtype == int8:
+            tmp_var = builder.sext(res['name'],dtype)
+            return {
+                'type':dtype,
+                'const':False,
+                'name':tmp_var
+            }
+        elif dtype == double:
+            tmp_var  = builder.sitofp(res['name'],dtype)
+            return {
+                'type':dtype,
+                'const':False,
+                'name':tmp_var
+            }
+        else:
+            print("ConvertToType Error")
+
+    def convertToSameType(self,lres,rres):
+        if lres['type'] == rres['type']:
+            return lres,rres
+        if self.isInteger(lres) and self.isInteger(rres):
+            if lres['type'].width < rres['type'].width:
+                lres = self.convertToType(lres,rres['type'])
+            else:
+                rres = self.convertToType(rres,lres['type'])
+        
+        elif self.isInteger(lres) and self.isDouble(rres):
+            lres = self.convertToType(lres,rres['type'])
+        elif self.isInteger(rres) and self.isDouble(lres):
+            rres = self.convertToType(rres,lres['type'])
+        else:
+            print("ConvertToSameType Error")
+        return lres,rres
+        
+        
 
 del c2llvmParser

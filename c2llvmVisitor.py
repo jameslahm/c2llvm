@@ -139,6 +139,11 @@ class c2llvmVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by c2llvmParser#AddSub.
+    def visitAddSub(self, ctx:c2llvmParser.AddSubContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by c2llvmParser#Parens.
     def visitParens(self, ctx:c2llvmParser.ParensContext):
         return self.visitChildren(ctx)
@@ -174,13 +179,33 @@ class c2llvmVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by c2llvmParser#AndSub.
-    def visitAndSub(self, ctx:c2llvmParser.AndSubContext):
+    # Visit a parse tree produced by c2llvmParser#vType.
+    def visitVType(self, ctx:c2llvmParser.VTypeContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by c2llvmParser#vType.
-    def visitVType(self, ctx:c2llvmParser.VTypeContext):
+    # Visit a parse tree produced by c2llvmParser#vInt.
+    def visitVInt(self, ctx:c2llvmParser.VIntContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#vChar.
+    def visitVChar(self, ctx:c2llvmParser.VCharContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#vDouble.
+    def visitVDouble(self, ctx:c2llvmParser.VDoubleContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#vString.
+    def visitVString(self, ctx:c2llvmParser.VStringContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#vId.
+    def visitVId(self, ctx:c2llvmParser.VIdContext):
         return self.visitChildren(ctx)
 
 

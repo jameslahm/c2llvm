@@ -242,6 +242,15 @@ class c2llvmListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by c2llvmParser#AddSub.
+    def enterAddSub(self, ctx:c2llvmParser.AddSubContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#AddSub.
+    def exitAddSub(self, ctx:c2llvmParser.AddSubContext):
+        pass
+
+
     # Enter a parse tree produced by c2llvmParser#Parens.
     def enterParens(self, ctx:c2llvmParser.ParensContext):
         pass
@@ -305,21 +314,57 @@ class c2llvmListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by c2llvmParser#AndSub.
-    def enterAndSub(self, ctx:c2llvmParser.AndSubContext):
-        pass
-
-    # Exit a parse tree produced by c2llvmParser#AndSub.
-    def exitAndSub(self, ctx:c2llvmParser.AndSubContext):
-        pass
-
-
     # Enter a parse tree produced by c2llvmParser#vType.
     def enterVType(self, ctx:c2llvmParser.VTypeContext):
         pass
 
     # Exit a parse tree produced by c2llvmParser#vType.
     def exitVType(self, ctx:c2llvmParser.VTypeContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#vInt.
+    def enterVInt(self, ctx:c2llvmParser.VIntContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#vInt.
+    def exitVInt(self, ctx:c2llvmParser.VIntContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#vChar.
+    def enterVChar(self, ctx:c2llvmParser.VCharContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#vChar.
+    def exitVChar(self, ctx:c2llvmParser.VCharContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#vDouble.
+    def enterVDouble(self, ctx:c2llvmParser.VDoubleContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#vDouble.
+    def exitVDouble(self, ctx:c2llvmParser.VDoubleContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#vString.
+    def enterVString(self, ctx:c2llvmParser.VStringContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#vString.
+    def exitVString(self, ctx:c2llvmParser.VStringContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#vId.
+    def enterVId(self, ctx:c2llvmParser.VIdContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#vId.
+    def exitVId(self, ctx:c2llvmParser.VIdContext):
         pass
 
 
