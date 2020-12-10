@@ -1,11 +1,8 @@
 # Generated from c2llvm.g4 by ANTLR 4.9
-from io import BufferedRandom
 from os import name
 from typing import Dict, List
 from antlr4 import *
-from llvmlite.ir import builder
 from llvmlite.ir.builder import IRBuilder
-from llvmlite.ir.instructions import SelectInstr
 from llvmlite.ir.values import Block, Function
 if __name__ is not None and "." in __name__:
     from .c2llvmParser import c2llvmParser
@@ -73,7 +70,7 @@ class Visitor(c2llvmVisitor):
         
         member_types = []
         member_names = []
-        for index in range(2,len(ctx.getChildCount())-2):
+        for index in range(2,ctx.getChildCount()-2):
             v_types,v_names = self.visit(ctx.getChild(index))
             member_types.extend(v_types)
             member_names.extend(v_names)
@@ -87,10 +84,27 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#structMemberDeclaration.
     def visitStructMemberDeclaration(self, ctx:c2llvmParser.StructMemberDeclarationContext):
-        return self.visitChildren(ctx)
+        v_types = []
+        v_names = []
 
+        if ctx.getChild(0).getChildCount() == 1:
+            v_type = self.visit(ctx.getChild(0))
 
+            for index in range(0,(ctx.getChildCount() - 1) // 2):
+                if ctx.getChild(2*index+1).getChildCount() == 1:
+                    v_names.append(ctx.getChild(2*index+1).getText())
+                    v_types.append(v_type)
+                elif ctx.getChild(2*index+1).getChildCount() == 4:
+                    res = self.visit(ctx.getChild(2*index+1))
+                    v_names.append(res['name'])
+                    v_types.append(ir.ArrayType(v_type,res['length']))
+                else:
+                    print("Struct Member Declaration Error")
         
+        else:
+            print("Error")
+
+
     # Visit a parse tree produced by c2llvmParser#statement.
     def visitStatement(self, ctx:c2llvmParser.StatementContext):
         return self.visitChildren(ctx)
@@ -98,6 +112,10 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#assignStatement.
     def visitAssignStatement(self, ctx:c2llvmParser.AssignStatementContext):
+        builder = self.builders[-1]
+        
+
+
         return self.visitChildren(ctx)
 
 
@@ -187,22 +205,187 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#arrayDefinitionStatement.
     def visitArrayDefinitionStatement(self, ctx:c2llvmParser.ArrayDefinitionStatementContext):
-        return self.visitChildren(ctx)
+        v_type = self.visit(ctx.getChild(0))
+        v_name = ctx.getChild(1).getText()
+        array_len = int(ctx.getChild(3).getText())
+
+        if len(self.blocks) == 0:
+            self.insert_symbol_table(v_name)
+            if v_name in self.global_vars:
+                print("Error")
+            tmp_var = ir.GlobalVariable(self.module,ir.ArrayType(v_type,array_len))
+            tmp_var.linkage = 'common'
+            self.global_vars[v_name]={
+                'type':ir.ArrayType(v_type,array_len),
+                'name':tmp_var
+            }
+            return
+        
+        builder = self.builders[-1]
+        local_var_list = self.local_vars[-1]
+        self.insert_symbol_table(v_name)
+        if v_name in self.local_vars:
+            print("Error")
+            return 
+        tmp_var = builder.alloca(ir.ArrayType(v_type,array_len),name=v_name)
+        local_var_list[v_name]={
+            'type':ir.ArrayType(v_type,array_len),
+            'name':tmp_var
+        }
+        return
+
 
 
     # Visit a parse tree produced by c2llvmParser#structDefinitionStatement.
     def visitStructDefinitionStatement(self, ctx:c2llvmParser.StructDefinitionStatementContext):
-        return self.visitChildren(ctx)
+        res = self.visit(ctx.getChild(0))
+        v_type = res['struct']
+        struct_name = ctx.getChild(0).getChild(1).getText()
+
+        if ctx.getChild(1).getChildCount() == 1:
+            v_name = ctx.getChild(1).getText()
+            self.insert_symbol_table(v_name)
+            if len(self.blocks)==0:
+                if v_name in self.global_vars:
+                    print("Error")
+                tmp_var = ir.GlobalVariable(self.module,v_type,name=v_name)
+                tmp_var.linkage = 'common'
+                tmp_var.initializer = ir.Constant(v_type,None)
+
+                self.global_vars[v_name]={
+                    'struct_name':struct_name,
+                    'type':v_type,
+                    'name':tmp_var
+                }
+            else:
+                builder = self.builders[-1]
+                local_var_list = self.local_vars[-1]
+                if v_name in local_var_list:
+                    print("Error")
+                tmp_var = builder.alloca(v_type,name=v_name)
+                local_var_list[v_name]={
+                    'struct_name':struct_name,
+                    'type':v_type,
+                    'name':tmp_var
+                }
+        else:
+            res = self.visit(ctx.getChild(1))
+            v_name = res['name']
+
+            v_type = ir.ArrayType(v_type,res['length'])
+            self.insert_symbol_table(v_name)
+
+            if len(self.blocks)==0:
+                if v_name in self.global_vars:
+                    print("Error")
+                tmp_var = ir.GlobalVariable(self.module,v_type,name=v_name)
+                tmp_var.linkage = 'common'
+                tmp_var.initializer = ir.Constant(v_type,None)
+
+                self.global_vars[v_name]={
+                    'struct_name':struct_name,
+                    'type':v_type,
+                    'name':tmp_var
+                }
+            else:
+                builder = self.builders[-1]
+                local_var_list = self.local_vars[-1]
+
+                if v_name in local_var_list:
+                    print("Error")
+                tmp_var = builder.alloca(v_type,name=v_name)
+                local_var_list[v_name]={
+                    'struct_name':struct_name,
+                    'type':v_type,
+                    'name':tmp_var
+                }
+        return
+            
 
 
     # Visit a parse tree produced by c2llvmParser#vArrayItem.
     def visitVArrayItem(self, ctx:c2llvmParser.VArrayItemContext):
-        return self.visitChildren(ctx)
+        need_load_backup = self.need_load
+        self.need_load = False
+        res = self.visit(ctx.getChild(0))
+        self.need_load = need_load_backup
+
+        if isinstance(res['type'],ir.types.ArrayType):
+            builder = self.builders[-1]
+
+            need_load_backup = self.need_load
+            self.need_load = True
+            index_res = self.visit(ctx.getChild(2))
+            self.need_load = need_load_backup
+
+            zero_base = ir.Constant(int32,0)
+            tmp_var = builder.gep(res['name'],[zero_base,index_res['name']],inbounds=True)
+
+            if self.need_load:
+                tmp_var = builder.load(tmp_var)
+            
+            return {
+                'type':res['type'].element,
+                'const':False,
+                'name':tmp_var,
+                'struct_name':res['struct_name'] if 'struct_name' in res else None
+            }
+        else:
+            pass
 
 
     # Visit a parse tree produced by c2llvmParser#vStructMember.
     def visitVStructMember(self, ctx:c2llvmParser.VStructMemberContext):
-        return self.visitChildren(ctx)
+        builder = self.builders[-1]
+        if ctx.getChild(0).getChildCount() == 1:
+            if ctx.getChild(2).getChildCount()==1:
+                need_loca_backup = self.need_load
+                self.need_load = False
+                res = self.visit(ctx.getChild(0))
+                self.need_load = need_loca_backup
+
+                struct_name = res['struct_name']
+                index =self.structures[struct_name]['members'].index(ctx.getChild(2).getText())
+
+                zero_base = ir.Constant(int32,0)
+                offset = ir.Constant(int32,index)
+
+                tmp_var = builder.gep(res['name'],[zero_base,offset],inbounds=True)
+
+                if self.need_load:
+                    tmp_var = builder.load(tmp_var)
+                
+                return {
+                    'type':self.structures[struct_name]['struct'].elements[index],
+                    'const':False,
+                    'name':tmp_var
+                }
+            else:
+                pass
+            
+        else:
+            if ctx.getChild(2).getChildCount()==1:
+                need_load_backup = self.need_load
+                self.need_load = False
+                res = self.visit(ctx.getChild(0))
+                self.need_load = need_load_backup
+
+                struct_name = res['struct_name']
+                index = self.structures[struct_name]['members'].index(ctx.getChild(2).getText())
+                zero_base = ir.Constant(int32,0)
+                offset = ir.Constant(int32,index)
+                tmp_var = builder.gep(res['name'],[zero_base,offset],inbounds=True)
+
+                if self.need_load:
+                    tmp_var = builder.load(tmp_var)
+                
+                return {
+                    'type':self.structures[struct_name]['struct'].elements[index],
+                    'const':False,
+                    'name':tmp_var
+                }
+            else:
+                pass
 
     # Visit a parse tree produced by c2llvmParser#funcStatement.
     def visitFuncStatement(self, ctx:c2llvmParser.FuncStatementContext):
@@ -256,7 +439,7 @@ class Visitor(c2llvmVisitor):
         self.local_vars.append(local_var_list)
         self.current_func = func_name
 
-        for index in range(6,len(ctx.getChildCount()-1)):
+        for index in range(6,ctx.getChildCount()-1):
             self.visit(ctx.getChild(index))
         
         self.current_func = ""
@@ -271,7 +454,7 @@ class Visitor(c2llvmVisitor):
     # Visit a parse tree produced by c2llvmParser#paramsDefinitionPattern.
     def visitParamsDefinitionPattern(self, ctx:c2llvmParser.ParamsDefinitionPatternContext):
         return [self.visit(ctx.getChild(index * 2)) for \
-            index in range(0,(len(ctx.getChildCount())+1)//2)]
+            index in range(0,(ctx.getChildCount()+1)//2)]
 
 
     # Visit a parse tree produced by c2llvmParser#paramDefinitionPattern.
