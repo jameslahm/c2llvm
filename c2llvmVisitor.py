@@ -119,8 +119,63 @@ class c2llvmVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by c2llvmParser#expression.
-    def visitExpression(self, ctx:c2llvmParser.ExpressionContext):
+    # Visit a parse tree produced by c2llvmParser#Neg.
+    def visitNeg(self, ctx:c2llvmParser.NegContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#MulDivMod.
+    def visitMulDivMod(self, ctx:c2llvmParser.MulDivModContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#FunctionExpr.
+    def visitFunctionExpr(self, ctx:c2llvmParser.FunctionExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#Or.
+    def visitOr(self, ctx:c2llvmParser.OrContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#Parens.
+    def visitParens(self, ctx:c2llvmParser.ParensContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#Char.
+    def visitChar(self, ctx:c2llvmParser.CharContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#And.
+    def visitAnd(self, ctx:c2llvmParser.AndContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#Compare.
+    def visitCompare(self, ctx:c2llvmParser.CompareContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#Id.
+    def visitId(self, ctx:c2llvmParser.IdContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#Double.
+    def visitDouble(self, ctx:c2llvmParser.DoubleContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#Int.
+    def visitInt(self, ctx:c2llvmParser.IntContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#AndSub.
+    def visitAndSub(self, ctx:c2llvmParser.AndSubContext):
         return self.visitChildren(ctx)
 
 

@@ -206,12 +206,111 @@ class c2llvmListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by c2llvmParser#expression.
-    def enterExpression(self, ctx:c2llvmParser.ExpressionContext):
+    # Enter a parse tree produced by c2llvmParser#Neg.
+    def enterNeg(self, ctx:c2llvmParser.NegContext):
         pass
 
-    # Exit a parse tree produced by c2llvmParser#expression.
-    def exitExpression(self, ctx:c2llvmParser.ExpressionContext):
+    # Exit a parse tree produced by c2llvmParser#Neg.
+    def exitNeg(self, ctx:c2llvmParser.NegContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#MulDivMod.
+    def enterMulDivMod(self, ctx:c2llvmParser.MulDivModContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#MulDivMod.
+    def exitMulDivMod(self, ctx:c2llvmParser.MulDivModContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#FunctionExpr.
+    def enterFunctionExpr(self, ctx:c2llvmParser.FunctionExprContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#FunctionExpr.
+    def exitFunctionExpr(self, ctx:c2llvmParser.FunctionExprContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#Or.
+    def enterOr(self, ctx:c2llvmParser.OrContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#Or.
+    def exitOr(self, ctx:c2llvmParser.OrContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#Parens.
+    def enterParens(self, ctx:c2llvmParser.ParensContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#Parens.
+    def exitParens(self, ctx:c2llvmParser.ParensContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#Char.
+    def enterChar(self, ctx:c2llvmParser.CharContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#Char.
+    def exitChar(self, ctx:c2llvmParser.CharContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#And.
+    def enterAnd(self, ctx:c2llvmParser.AndContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#And.
+    def exitAnd(self, ctx:c2llvmParser.AndContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#Compare.
+    def enterCompare(self, ctx:c2llvmParser.CompareContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#Compare.
+    def exitCompare(self, ctx:c2llvmParser.CompareContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#Id.
+    def enterId(self, ctx:c2llvmParser.IdContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#Id.
+    def exitId(self, ctx:c2llvmParser.IdContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#Double.
+    def enterDouble(self, ctx:c2llvmParser.DoubleContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#Double.
+    def exitDouble(self, ctx:c2llvmParser.DoubleContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#Int.
+    def enterInt(self, ctx:c2llvmParser.IntContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#Int.
+    def exitInt(self, ctx:c2llvmParser.IntContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#AndSub.
+    def enterAndSub(self, ctx:c2llvmParser.AndSubContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#AndSub.
+    def exitAndSub(self, ctx:c2llvmParser.AndSubContext):
         pass
 
 
