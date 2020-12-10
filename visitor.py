@@ -2,6 +2,7 @@
 from os import name
 from typing import Dict, List
 from antlr4 import *
+from llvmlite.ir import builder
 from llvmlite.ir.builder import IRBuilder
 from llvmlite.ir.values import Block, Function
 if __name__ is not None and "." in __name__:
@@ -113,15 +114,33 @@ class Visitor(c2llvmVisitor):
     # Visit a parse tree produced by c2llvmParser#assignStatement.
     def visitAssignStatement(self, ctx:c2llvmParser.AssignStatementContext):
         builder = self.builders[-1]
+
+        res = self.visit(ctx.getChild(ctx.getChildCount()-2))
+
+        for index in reversed(range(0,(ctx.getChildCount() - 2)//2 )):
+            need_load_backup = self.need_load
+            self.need_load = False
+
+            v_res = self.visit(ctx.getChild(index*2))
+            self.need_load=need_load_backup
+
+            res = self.convertToType(res,v_res['type'])
+            builder.store(res['name'],v_res['name'])
+
+            tmp_var = builder.load(v_res['name'])
+            res = {
+                'type':v_res['type'],
+                'const':False,
+                'name':tmp_var
+            }
         
-
-
-        return self.visitChildren(ctx)
+        return res
 
 
     # Visit a parse tree produced by c2llvmParser#ifStatement.
     def visitIfStatement(self, ctx:c2llvmParser.IfStatementContext):
-        return self.visitChildren(ctx)
+        builder = self.builders[-1]
+        
 
 
     # Visit a parse tree produced by c2llvmParser#elseifStatement.

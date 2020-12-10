@@ -19,7 +19,7 @@ statement:
 	| arrayDefinitionStatement
 	| structDefinitionStatement
 	| assignStatement
-	| ifStatement
+	| conditionStatement
 	| whileStatement
 	| forStatement
 	| returnStatement
@@ -29,8 +29,11 @@ statement:
 
 assignStatement: ((vId | vArrayItem | vStructMember) '=')+ expression ';';
 
+conditionStatement:
+	ifStatement elseifStatement* elseStatement?;
+
 ifStatement:
-	'if' '(' expression ')' '{' statement* '}' elseifStatement* elseStatement?;
+	'if' '(' expression ')' '{' statement* '}';
 
 elseifStatement:
 	'else' 'if' '(' expression ')' '{' statement* '}';
