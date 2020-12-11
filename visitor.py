@@ -1,5 +1,5 @@
 # Generated from c2llvm.g4 by ANTLR 4.9
-from os import name
+from os import O_NDELAY, name
 from typing import Dict, List
 from antlr4 import *
 from llvmlite.ir import builder
@@ -46,10 +46,17 @@ class Visitor(c2llvmVisitor):
 
         self.end_condition_block = None
 
+        self.vstring_num = 0
+
+        self.init_internal_functions()
+
+    def init_internal_functions(self):
+        printfty = ir.FunctionType(int32,[ir.PointerType(int8)],var_arg=True)
+        printf = ir.Function(self.module,printfty,name="printf")
+        self.functions['printf']= printf
 
     # Visit a parse tree produced by c2llvmParser#prog.
     def visitProg(self, ctx:c2llvmParser.ProgContext):
-        print("Prog")
         return self.visitChildren(ctx)
 
 
@@ -653,21 +660,62 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#funcExpression.
     def visitFuncExpression(self, ctx:c2llvmParser.FuncExpressionContext):
-        return self.visitChildren(ctx)
+        func_name = ctx.getChild(0).getText()
+
+        # check inter function
+
+        if func_name=='printf':
+            printf = self.functions['printf']
+        
+            builder = self.builders[-1]
+            zero_base = ir.Constant(int32,0)
+
+            args = self.visit(ctx.getChild(2))
+            args[0] = builder.gep(args[0]['name'],[zero_base,zero_base],inbounds=True)
+            ret = builder.call(printf,args)
+            
+            return {
+                'type':int32,
+                'const':False,
+                'name':ret
+            }
+        
+        builder = self.builders[-1]
+
+        if func_name in self.functions:
+            func = self.functions[func_name]
+
+            params = self.visit(ctx.getChild(2))
+
+            for index in range(0,len(params)):
+                params[index] = self.convertToType(params[index],func.args[index].type)
+            
+            params = list(map(lambda param:param['name'],params))
+
+            tmp_var = builder.call(func,params)
+            return {
+                'type':func.function_type.return_type,
+                'const':False,
+                'name':tmp_var
+            }
+        else:
+            print("Func Expression Error")
+
+
+
 
     # Visit a parse tree produced by c2llvmParser#paramsInvokePattern.
     def visitParamsInvokePattern(self, ctx:c2llvmParser.ParamsInvokePatternContext):
-        return self.visitChildren(ctx)
+        return [self.visit(ctx.getChild(index)) for index in range(0,ctx.getChildCount(),2)]
 
 
     # Visit a parse tree produced by c2llvmParser#paramInvokePattern.
     def visitParamInvokePattern(self, ctx:c2llvmParser.ParamInvokePatternContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.getChild(0))
 
 
     # Visit a parse tree produced by c2llvmParser#functionDeclaration.
     def visitFunctionDeclaration(self, ctx:c2llvmParser.FunctionDeclarationContext):
-        print("Function Declaration")
 
         self.enter_scope()
 
@@ -711,7 +759,7 @@ class Visitor(c2llvmVisitor):
         self.local_vars.pop()
         self.leave_scope()
 
-        return self.visitChildren(ctx)
+        return
 
 
     # Visit a parse tree produced by c2llvmParser#paramsDefinitionPattern.
@@ -765,7 +813,7 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#FunctionExpr.
     def visitFunctionExpr(self, ctx:c2llvmParser.FunctionExprContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.getChild(0))
 
 
     # Visit a parse tree produced by c2llvmParser#Or.
@@ -935,7 +983,20 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#vString.
     def visitVString(self, ctx:c2llvmParser.VStringContext):
-        return self.visitChildren(ctx)
+        v_string = ctx.getText().replace('\\n','\n')
+        v_string = v_string[1:-1]
+        v_string += '\0'
+        v_len = len(bytearray(v_string,'utf-8'))
+
+        self.vstring_num+=1
+        v_name = ir.GlobalVariable(self.module,ir.ArrayType(int8,v_len),".string{}".format(self.vstring_num))
+        v_name.global_constant = True
+        v_name.initializer = ir.Constant(ir.ArrayType(int8,v_len),bytearray(v_string,'utf-8'))
+        return {
+            'type':ir.ArrayType(int8,v_len),
+            'const':True,
+            'name':v_name
+        }
 
 
     # Visit a parse tree produced by c2llvmParser#vId.
@@ -1009,7 +1070,8 @@ class Visitor(c2llvmVisitor):
             if(self.symbol_table[k][-1] == self.scope):
                 self.symbol_table[k].pop(-1)
 
-                if (len(self.symbol_table[k])==0):
+        for k in list(self.symbol_table.keys()):
+            if (len(self.symbol_table[k])==0):
                     del self.symbol_table[k]
         self.scope -= 1
 

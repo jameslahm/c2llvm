@@ -1,7 +1,14 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-int main(){
-    printf("hello!");
-    return 0;
+void hello(int a){
+    printf("hello\n");
+	return;
+}
+
+int main()
+{
+    hello(1);
+	printf("hello\n");	
+	return 0;
 }

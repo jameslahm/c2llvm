@@ -14,7 +14,10 @@ def main(argv):
     tree = parser.prog()
     v= Visitor()
     v.visit(tree)
-    print(v.module)
- 
+    if (len(argv)==3):
+        print(v.module,file=open(argv[2],'w'))
+    else:
+        print(v.module)
+
 if __name__ == '__main__':
     main(sys.argv)
