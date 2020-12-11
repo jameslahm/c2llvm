@@ -179,6 +179,11 @@ class c2llvmVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by c2llvmParser#String.
+    def visitString(self, ctx:c2llvmParser.StringContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by c2llvmParser#Double.
     def visitDouble(self, ctx:c2llvmParser.DoubleContext):
         return self.visitChildren(ctx)

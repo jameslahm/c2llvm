@@ -81,7 +81,7 @@ paramsInvokePattern:
 	paramInvokePattern (',' paramInvokePattern)*
 	|;
 
-paramInvokePattern: vId | vChar | vInt | vDouble | vString;
+paramInvokePattern: expression;
 
 functionDeclaration:
 	vType vId '(' paramsDefinitionPattern ')' '{' statement* '}';
@@ -105,6 +105,7 @@ expression:
 	| (op = '-')? vInt #Int
 	| (op = '-')? vDouble #Double
 	| vChar #Char
+	| vString #String
 	| vId #Id
 	| funcExpression #FunctionExpr
 	;

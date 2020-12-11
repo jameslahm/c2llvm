@@ -7,6 +7,7 @@ void hello(int a){
 
 int main()
 {
-	printf("%d",1);	
+	char a[2];
+	int b = a[0];
 	return 0;
 }

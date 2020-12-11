@@ -314,6 +314,15 @@ class c2llvmListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by c2llvmParser#String.
+    def enterString(self, ctx:c2llvmParser.StringContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#String.
+    def exitString(self, ctx:c2llvmParser.StringContext):
+        pass
+
+
     # Enter a parse tree produced by c2llvmParser#Double.
     def enterDouble(self, ctx:c2llvmParser.DoubleContext):
         pass

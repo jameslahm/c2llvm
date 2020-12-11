@@ -403,6 +403,7 @@ class Visitor(c2llvmVisitor):
         self.need_load = need_load_backup
 
         expr_res = self.visit(ctx.getChild(2))
+
         expr_res = self.convertToType(expr_res,v_res['type'])
 
         builder = self.builders[-1]
@@ -930,6 +931,10 @@ class Visitor(c2llvmVisitor):
     def visitChar(self, ctx:c2llvmParser.CharContext):
         return self.visit(ctx.getChild(0))
 
+    # Visit a parse tree produced by c2llvmParser#String.
+    def visitString(self, ctx:c2llvmParser.StringContext):
+        return self.visit(ctx.getChild(0))
+
 
     # Visit a parse tree produced by c2llvmParser#And.
     def visitAnd(self, ctx:c2llvmParser.AndContext):
@@ -1017,6 +1022,9 @@ class Visitor(c2llvmVisitor):
 
         lres,rres = self.convertToSameType(lres,rres)
 
+        if ctx.getChild(2).getText()== '48':
+            print("Sub ",lres,rres)
+
         tmp_var =None
 
         if ctx.getChild(1).getText() == '+':
@@ -1059,6 +1067,7 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#vChar.
     def visitVChar(self, ctx:c2llvmParser.VCharContext):
+        print("Char ",ord(ctx.getText()[1]))
         return {
             'type':int8,
             'const':True,
