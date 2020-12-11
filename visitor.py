@@ -181,6 +181,7 @@ class Visitor(c2llvmVisitor):
 
         if_true_block = builder.append_basic_block()
         if_false_block = builder.append_basic_block()
+        res = self.toBool(res)
         builder.cbranch(res['name'],if_true_block,if_false_block)
 
         self.blocks.pop()
@@ -217,6 +218,7 @@ class Visitor(c2llvmVisitor):
         elseif_true_block = builder.append_basic_block()
         elseif_false_block = builder.append_basic_block()
 
+        res = self.toBool(res)
         builder.cbranch(res['name'],elseif_true_block,elseif_false_block)
 
         self.blocks.pop()
@@ -259,28 +261,162 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#whileStatement.
     def visitWhileStatement(self, ctx:c2llvmParser.WhileStatementContext):
-        return self.visitChildren(ctx)
+        self.enter_scope()
+        builder = self.builders[-1]
+        while_condition_block = builder.append_basic_block()
+        while_body_block = builder.append_basic_block()
+        while_end_block = builder.append_basic_block()
+
+        builder.branch(while_condition_block)
+
+        self.blocks.pop()
+        self.builders.pop()
+
+        self.blocks.append(while_condition_block)
+        self.builders.append(ir.IRBuilder(while_condition_block))
+
+        res = self.visit(ctx.getChild(2))
+        res = self.toBool(res)
+
+        builder = self.builders[-1]
+        builder.cbranch(res['name'],while_body_block,while_end_block)
+
+        self.blocks.pop()
+        self.builders.pop()
+
+        self.blocks.append(while_body_block)
+        self.builders.append(ir.IRBuilder(while_body_block))
+        self.local_vars.append({})
+
+        for index in range(5,ctx.getChildCount()-1):
+            self.visit(ctx.getChild(index))
+        
+        builder = self.builders[-1]
+        builder.branch(while_condition_block)
+        self.blocks.pop()
+        self.builders.pop()
+        self.local_vars.pop()
+
+        self.blocks.append(while_end_block)
+        self.builders.append(ir.IRBuilder(while_end_block))
+        self.leave_scope()
+        return
+
 
 
     # Visit a parse tree produced by c2llvmParser#forStatement.
     def visitForStatement(self, ctx:c2llvmParser.ForStatementContext):
-        return self.visitChildren(ctx)
+        self.enter_scope()
+        self.visit(ctx.getChild(2))
+
+        builder = self.builders[-1]
+        for_condition_block = builder.append_basic_block()
+        for_body_block = builder.append_basic_block()
+        for_end_block = builder.append_basic_block()
+
+        builder.branch(for_condition_block)
+
+        self.blocks.pop()
+        self.builders.pop()
+        self.blocks.append(for_condition_block)
+        self.builders.append(ir.IRBuilder(for_condition_block))
+
+        res = self.visit(ctx.getChild(4))
+        res = self.toBool(res)
+
+        builder = self.builders[-1]
+        builder.cbranch(res['name'],for_body_block,for_end_block)
+
+        self.blocks.pop()
+        self.builders.pop()
+
+        self.blocks.append(for_body_block)
+        self.builders.append(ir.IRBuilder(for_body_block))
+        self.local_vars.append({})
+
+        for index in range(9,ctx.getChildCount()-1):
+            self.visit(ctx.getChild(index))
+        
+        self.visit(ctx.getChild(6))
+
+        builder = self.builders[-1]
+        builder.branch(for_condition_block)
+        self.blocks.pop()
+        self.builders.pop()
+        self.local_vars.pop()
+
+        self.blocks.append(for_end_block)
+        self.builders.append(ir.IRBuilder(for_end_block))
+        self.leave_scope()
+        return
+
+
 
 
     # Visit a parse tree produced by c2llvmParser#forInitStatement.
     def visitForInitStatement(self, ctx:c2llvmParser.ForInitStatementContext):
-        return self.visitChildren(ctx)
+        if ctx.getChildCount()==0:
+            return
+        
+        need_load_backup = self.need_load
+        self.need_load = False
+        
+        v_res = self.visit(ctx.getChild(0))
+        self.need_load = need_load_backup
+
+        expr_res = self.visit(ctx.getChild(2))
+        expr_res =  self.convertToType(expr_res,v_res['type'])
+
+        builder = self.builders[-1]
+        builder.store(expr_res['name'],v_res['name'])
+
+        if ctx.getChildCount() >=5:
+            self.visit(ctx.getChild(4))
+
 
 
     # Visit a parse tree produced by c2llvmParser#forExecStatement.
     def visitForExecStatement(self, ctx:c2llvmParser.ForExecStatementContext):
-        return self.visitChildren(ctx)
+        if ctx.getChildCount()==0:
+            return
+        
+        need_load_backup = self.need_load
+        self.need_load = False
+        v_res = self.visit(ctx.getChild(0))
+        self.need_load = need_load_backup
+
+        expr_res = self.visit(ctx.getChild(2))
+        expr_res = self.convertToType(expr_res,v_res['type'])
+
+        builder = self.builders[-1]
+        builder.store(expr_res['name'],v_res['name'])
+
+        if ctx.getChildCount()>=5:
+            self.visit(ctx.getChild(4))
+        return
+
+
 
 
     # Visit a parse tree produced by c2llvmParser#returnStatement.
     def visitReturnStatement(self, ctx:c2llvmParser.ReturnStatementContext):
-        return self.visitChildren(ctx)
+        builder = self.builders[-1]
 
+        if ctx.getChildCount()==2:
+            ret = builder.ret_void()
+            return {
+                'type':void,
+                'const':False,
+                'name':ret
+            }
+        
+        res = self.visit(ctx.getChild(1))
+        ret = builder.ret(res['name'])
+        return {
+            'type':ret.type,
+            'const':False,
+            'name':ret
+        }
 
     # Visit a parse tree produced by c2llvmParser#breakStatement.
     def visitBreakStatement(self, ctx:c2llvmParser.BreakStatementContext):
@@ -851,11 +987,14 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#vStruct.
     def visitVStruct(self, ctx:c2llvmParser.VStructContext):
-        return self.visitChildren(ctx)
+        return self.structures[ctx.getChild(1).getText()]
 
     # Visit a parse tree produced by c2llvmParser#vArray.
     def visitVArray(self, ctx:c2llvmParser.VArrayContext):
-        return self.visitChildren(ctx)
+        return {
+            'name':ctx.getChild(0).getText(),
+            'length':int(ctx.getChild(2).getText())
+        }
 
 
     def enter_scope(self):

@@ -73,7 +73,9 @@ vArrayItem:
 vStructMember:
 	(vId | vArrayItem) '.' (vId | vArrayItem);
 
-funcStatement: vId '(' paramsInvokePattern ')' ';';
+funcStatement: funcExpression ';';
+
+funcExpression: vId '(' paramsInvokePattern ')';
 
 paramsInvokePattern:
 	paramInvokePattern (',' paramInvokePattern)*
@@ -102,7 +104,7 @@ expression:
 	| (op = '-')? vDouble #Double
 	| vChar #Char
 	| vId #Id
-	| vId '(' paramsInvokePattern ')' #FunctionExpr
+	| funcExpression #FunctionExpr
 	;
 
 vType: 'int' | 'double' | 'char' | 'void';
