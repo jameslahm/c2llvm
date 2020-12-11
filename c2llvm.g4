@@ -100,6 +100,8 @@ expression:
 	| expression op = ('==' | '!=' | '>=' | '>' | '<' | '<=') expression #Compare
 	| expression '&&' expression #And
 	| expression '||' expression #Or
+	| vArrayItem     #ArrayItem
+	| vStructMember  #structMember
 	| (op = '-')? vInt #Int
 	| (op = '-')? vDouble #Double
 	| vChar #Char

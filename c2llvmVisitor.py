@@ -159,16 +159,6 @@ class c2llvmVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by c2llvmParser#Neg.
-    def visitNeg(self, ctx:c2llvmParser.NegContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by c2llvmParser#MulDivMod.
-    def visitMulDivMod(self, ctx:c2llvmParser.MulDivModContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by c2llvmParser#FunctionExpr.
     def visitFunctionExpr(self, ctx:c2llvmParser.FunctionExprContext):
         return self.visitChildren(ctx)
@@ -189,6 +179,31 @@ class c2llvmVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by c2llvmParser#Double.
+    def visitDouble(self, ctx:c2llvmParser.DoubleContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#Int.
+    def visitInt(self, ctx:c2llvmParser.IntContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#Neg.
+    def visitNeg(self, ctx:c2llvmParser.NegContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#ArrayItem.
+    def visitArrayItem(self, ctx:c2llvmParser.ArrayItemContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by c2llvmParser#MulDivMod.
+    def visitMulDivMod(self, ctx:c2llvmParser.MulDivModContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by c2llvmParser#Char.
     def visitChar(self, ctx:c2llvmParser.CharContext):
         return self.visitChildren(ctx)
@@ -199,6 +214,11 @@ class c2llvmVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by c2llvmParser#structMember.
+    def visitStructMember(self, ctx:c2llvmParser.StructMemberContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by c2llvmParser#Compare.
     def visitCompare(self, ctx:c2llvmParser.CompareContext):
         return self.visitChildren(ctx)
@@ -206,16 +226,6 @@ class c2llvmVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by c2llvmParser#Id.
     def visitId(self, ctx:c2llvmParser.IdContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by c2llvmParser#Double.
-    def visitDouble(self, ctx:c2llvmParser.DoubleContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by c2llvmParser#Int.
-    def visitInt(self, ctx:c2llvmParser.IntContext):
         return self.visitChildren(ctx)
 
 

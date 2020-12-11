@@ -12,7 +12,7 @@ else:
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\62")
-        buf.write("\u01b3\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\u01b5\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
         buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4\23\t\23")
         buf.write("\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31")
@@ -48,13 +48,13 @@ def serializedATN():
         buf.write("\34\u0159\n\34\3\35\3\35\3\35\3\35\3\35\3\35\3\35\7\35")
         buf.write("\u0162\n\35\f\35\16\35\u0165\13\35\3\35\3\35\3\36\3\36")
         buf.write("\3\36\7\36\u016c\n\36\f\36\16\36\u016f\13\36\3\36\5\36")
-        buf.write("\u0172\n\36\3\37\3\37\3\37\3 \3 \3 \3 \3 \3 \3 \3 \5 ")
-        buf.write("\u017f\n \3 \3 \5 \u0183\n \3 \3 \3 \3 \5 \u0189\n \3")
-        buf.write(" \3 \3 \3 \3 \3 \3 \3 \3 \3 \3 \3 \3 \3 \3 \7 \u019a\n")
-        buf.write(" \f \16 \u019d\13 \3!\3!\3\"\3\"\3#\3#\3$\3$\3%\3%\3&")
-        buf.write("\3&\3\'\3\'\3\'\3(\3(\3(\3(\3(\3(\2\3>)\2\4\6\b\n\f\16")
+        buf.write("\u0172\n\36\3\37\3\37\3\37\3 \3 \3 \3 \3 \3 \3 \3 \3 ")
+        buf.write("\3 \5 \u0181\n \3 \3 \5 \u0185\n \3 \3 \3 \3 \5 \u018b")
+        buf.write("\n \3 \3 \3 \3 \3 \3 \3 \3 \3 \3 \3 \3 \3 \3 \3 \7 \u019c")
+        buf.write("\n \f \16 \u019f\13 \3!\3!\3\"\3\"\3#\3#\3$\3$\3%\3%\3")
+        buf.write("&\3&\3\'\3\'\3\'\3(\3(\3(\3(\3(\3(\2\3>)\2\4\6\b\n\f\16")
         buf.write("\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@BDF")
-        buf.write("HJLN\2\6\3\2\30\32\3\2\33\34\4\2\4\5\35 \3\2#&\2\u01cd")
+        buf.write("HJLN\2\6\3\2\30\32\3\2\33\34\4\2\4\5\35 \3\2#&\2\u01d1")
         buf.write("\2S\3\2\2\2\4]\3\2\2\2\6d\3\2\2\2\bf\3\2\2\2\nr\3\2\2")
         buf.write("\2\f\u008f\3\2\2\2\16\u0098\3\2\2\2\20\u009f\3\2\2\2\22")
         buf.write("\u00a9\3\2\2\2\24\u00b6\3\2\2\2\26\u00c4\3\2\2\2\30\u00ce")
@@ -63,9 +63,9 @@ def serializedATN():
         buf.write("\u0111\3\2\2\2(\u0124\3\2\2\2*\u012b\3\2\2\2,\u0132\3")
         buf.write("\2\2\2.\u0139\3\2\2\2\60\u0140\3\2\2\2\62\u0143\3\2\2")
         buf.write("\2\64\u0151\3\2\2\2\66\u0158\3\2\2\28\u015a\3\2\2\2:\u0171")
-        buf.write("\3\2\2\2<\u0173\3\2\2\2>\u0188\3\2\2\2@\u019e\3\2\2\2")
-        buf.write("B\u01a0\3\2\2\2D\u01a2\3\2\2\2F\u01a4\3\2\2\2H\u01a6\3")
-        buf.write("\2\2\2J\u01a8\3\2\2\2L\u01aa\3\2\2\2N\u01ad\3\2\2\2PR")
+        buf.write("\3\2\2\2<\u0173\3\2\2\2>\u018a\3\2\2\2@\u01a0\3\2\2\2")
+        buf.write("B\u01a2\3\2\2\2D\u01a4\3\2\2\2F\u01a6\3\2\2\2H\u01a8\3")
+        buf.write("\2\2\2J\u01aa\3\2\2\2L\u01ac\3\2\2\2N\u01af\3\2\2\2PR")
         buf.write("\5\4\3\2QP\3\2\2\2RU\3\2\2\2SQ\3\2\2\2ST\3\2\2\2TZ\3\2")
         buf.write("\2\2US\3\2\2\2VY\5\6\4\2WY\5\f\7\2XV\3\2\2\2XW\3\2\2\2")
         buf.write("Y\\\3\2\2\2ZX\3\2\2\2Z[\3\2\2\2[\3\3\2\2\2\\Z\3\2\2\2")
@@ -181,35 +181,36 @@ def serializedATN():
         buf.write("\3\2\2\2\u0171\u0168\3\2\2\2\u0171\u0170\3\2\2\2\u0172")
         buf.write(";\3\2\2\2\u0173\u0174\5@!\2\u0174\u0175\5J&\2\u0175=\3")
         buf.write("\2\2\2\u0176\u0177\b \1\2\u0177\u0178\7\f\2\2\u0178\u0179")
-        buf.write("\5> \2\u0179\u017a\7\r\2\2\u017a\u0189\3\2\2\2\u017b\u017c")
-        buf.write("\7\27\2\2\u017c\u0189\5> \r\u017d\u017f\7\34\2\2\u017e")
-        buf.write("\u017d\3\2\2\2\u017e\u017f\3\2\2\2\u017f\u0180\3\2\2\2")
-        buf.write("\u0180\u0189\5B\"\2\u0181\u0183\7\34\2\2\u0182\u0181\3")
-        buf.write("\2\2\2\u0182\u0183\3\2\2\2\u0183\u0184\3\2\2\2\u0184\u0189")
-        buf.write("\5F$\2\u0185\u0189\5D#\2\u0186\u0189\5J&\2\u0187\u0189")
-        buf.write("\5\62\32\2\u0188\u0176\3\2\2\2\u0188\u017b\3\2\2\2\u0188")
-        buf.write("\u017e\3\2\2\2\u0188\u0182\3\2\2\2\u0188\u0185\3\2\2\2")
-        buf.write("\u0188\u0186\3\2\2\2\u0188\u0187\3\2\2\2\u0189\u019b\3")
-        buf.write("\2\2\2\u018a\u018b\f\f\2\2\u018b\u018c\t\2\2\2\u018c\u019a")
-        buf.write("\5> \r\u018d\u018e\f\13\2\2\u018e\u018f\t\3\2\2\u018f")
-        buf.write("\u019a\5> \f\u0190\u0191\f\n\2\2\u0191\u0192\t\4\2\2\u0192")
-        buf.write("\u019a\5> \13\u0193\u0194\f\t\2\2\u0194\u0195\7!\2\2\u0195")
-        buf.write("\u019a\5> \n\u0196\u0197\f\b\2\2\u0197\u0198\7\"\2\2\u0198")
-        buf.write("\u019a\5> \t\u0199\u018a\3\2\2\2\u0199\u018d\3\2\2\2\u0199")
-        buf.write("\u0190\3\2\2\2\u0199\u0193\3\2\2\2\u0199\u0196\3\2\2\2")
-        buf.write("\u019a\u019d\3\2\2\2\u019b\u0199\3\2\2\2\u019b\u019c\3")
-        buf.write("\2\2\2\u019c?\3\2\2\2\u019d\u019b\3\2\2\2\u019e\u019f")
-        buf.write("\t\5\2\2\u019fA\3\2\2\2\u01a0\u01a1\7,\2\2\u01a1C\3\2")
-        buf.write("\2\2\u01a2\u01a3\7*\2\2\u01a3E\3\2\2\2\u01a4\u01a5\7)")
-        buf.write("\2\2\u01a5G\3\2\2\2\u01a6\u01a7\7+\2\2\u01a7I\3\2\2\2")
-        buf.write("\u01a8\u01a9\7(\2\2\u01a9K\3\2\2\2\u01aa\u01ab\7\'\2\2")
-        buf.write("\u01ab\u01ac\5J&\2\u01acM\3\2\2\2\u01ad\u01ae\5J&\2\u01ae")
-        buf.write("\u01af\7\24\2\2\u01af\u01b0\5B\"\2\u01b0\u01b1\7\25\2")
-        buf.write("\2\u01b1O\3\2\2\2,SXZdkrv{\177\u008f\u0094\u009a\u00a3")
-        buf.write("\u00a7\u00b1\u00bf\u00c9\u00d6\u00e7\u00ec\u00f3\u00f6")
-        buf.write("\u00fd\u0100\u0107\u0115\u011b\u011f\u012e\u0139\u013e")
-        buf.write("\u014d\u0151\u0158\u0163\u016d\u0171\u017e\u0182\u0188")
-        buf.write("\u0199\u019b")
+        buf.write("\5> \2\u0179\u017a\7\r\2\2\u017a\u018b\3\2\2\2\u017b\u017c")
+        buf.write("\7\27\2\2\u017c\u018b\5> \17\u017d\u018b\5,\27\2\u017e")
+        buf.write("\u018b\5.\30\2\u017f\u0181\7\34\2\2\u0180\u017f\3\2\2")
+        buf.write("\2\u0180\u0181\3\2\2\2\u0181\u0182\3\2\2\2\u0182\u018b")
+        buf.write("\5B\"\2\u0183\u0185\7\34\2\2\u0184\u0183\3\2\2\2\u0184")
+        buf.write("\u0185\3\2\2\2\u0185\u0186\3\2\2\2\u0186\u018b\5F$\2\u0187")
+        buf.write("\u018b\5D#\2\u0188\u018b\5J&\2\u0189\u018b\5\62\32\2\u018a")
+        buf.write("\u0176\3\2\2\2\u018a\u017b\3\2\2\2\u018a\u017d\3\2\2\2")
+        buf.write("\u018a\u017e\3\2\2\2\u018a\u0180\3\2\2\2\u018a\u0184\3")
+        buf.write("\2\2\2\u018a\u0187\3\2\2\2\u018a\u0188\3\2\2\2\u018a\u0189")
+        buf.write("\3\2\2\2\u018b\u019d\3\2\2\2\u018c\u018d\f\16\2\2\u018d")
+        buf.write("\u018e\t\2\2\2\u018e\u019c\5> \17\u018f\u0190\f\r\2\2")
+        buf.write("\u0190\u0191\t\3\2\2\u0191\u019c\5> \16\u0192\u0193\f")
+        buf.write("\f\2\2\u0193\u0194\t\4\2\2\u0194\u019c\5> \r\u0195\u0196")
+        buf.write("\f\13\2\2\u0196\u0197\7!\2\2\u0197\u019c\5> \f\u0198\u0199")
+        buf.write("\f\n\2\2\u0199\u019a\7\"\2\2\u019a\u019c\5> \13\u019b")
+        buf.write("\u018c\3\2\2\2\u019b\u018f\3\2\2\2\u019b\u0192\3\2\2\2")
+        buf.write("\u019b\u0195\3\2\2\2\u019b\u0198\3\2\2\2\u019c\u019f\3")
+        buf.write("\2\2\2\u019d\u019b\3\2\2\2\u019d\u019e\3\2\2\2\u019e?")
+        buf.write("\3\2\2\2\u019f\u019d\3\2\2\2\u01a0\u01a1\t\5\2\2\u01a1")
+        buf.write("A\3\2\2\2\u01a2\u01a3\7,\2\2\u01a3C\3\2\2\2\u01a4\u01a5")
+        buf.write("\7*\2\2\u01a5E\3\2\2\2\u01a6\u01a7\7)\2\2\u01a7G\3\2\2")
+        buf.write("\2\u01a8\u01a9\7+\2\2\u01a9I\3\2\2\2\u01aa\u01ab\7(\2")
+        buf.write("\2\u01abK\3\2\2\2\u01ac\u01ad\7\'\2\2\u01ad\u01ae\5J&")
+        buf.write("\2\u01aeM\3\2\2\2\u01af\u01b0\5J&\2\u01b0\u01b1\7\24\2")
+        buf.write("\2\u01b1\u01b2\5B\"\2\u01b2\u01b3\7\25\2\2\u01b3O\3\2")
+        buf.write("\2\2,SXZdkrv{\177\u008f\u0094\u009a\u00a3\u00a7\u00b1")
+        buf.write("\u00bf\u00c9\u00d6\u00e7\u00ec\u00f3\u00f6\u00fd\u0100")
+        buf.write("\u0107\u0115\u011b\u011f\u012e\u0139\u013e\u014d\u0151")
+        buf.write("\u0158\u0163\u016d\u0171\u0180\u0184\u018a\u019b\u019d")
         return buf.getvalue()
 
 
@@ -2702,61 +2703,6 @@ class c2llvmParser ( Parser ):
             super().copyFrom(ctx)
 
 
-    class NegContext(ExpressionContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
-            super().__init__(parser)
-            self.op = None # Token
-            self.copyFrom(ctx)
-
-        def expression(self):
-            return self.getTypedRuleContext(c2llvmParser.ExpressionContext,0)
-
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterNeg" ):
-                listener.enterNeg(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitNeg" ):
-                listener.exitNeg(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitNeg" ):
-                return visitor.visitNeg(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class MulDivModContext(ExpressionContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
-            super().__init__(parser)
-            self.op = None # Token
-            self.copyFrom(ctx)
-
-        def expression(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(c2llvmParser.ExpressionContext)
-            else:
-                return self.getTypedRuleContext(c2llvmParser.ExpressionContext,i)
-
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterMulDivMod" ):
-                listener.enterMulDivMod(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitMulDivMod" ):
-                listener.exitMulDivMod(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitMulDivMod" ):
-                return visitor.visitMulDivMod(self)
-            else:
-                return visitor.visitChildren(self)
-
-
     class FunctionExprContext(ExpressionContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
@@ -2864,6 +2810,138 @@ class c2llvmParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
+    class DoubleContext(ExpressionContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
+            super().__init__(parser)
+            self.op = None # Token
+            self.copyFrom(ctx)
+
+        def vDouble(self):
+            return self.getTypedRuleContext(c2llvmParser.VDoubleContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterDouble" ):
+                listener.enterDouble(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitDouble" ):
+                listener.exitDouble(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDouble" ):
+                return visitor.visitDouble(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class IntContext(ExpressionContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
+            super().__init__(parser)
+            self.op = None # Token
+            self.copyFrom(ctx)
+
+        def vInt(self):
+            return self.getTypedRuleContext(c2llvmParser.VIntContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterInt" ):
+                listener.enterInt(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitInt" ):
+                listener.exitInt(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInt" ):
+                return visitor.visitInt(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class NegContext(ExpressionContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
+            super().__init__(parser)
+            self.op = None # Token
+            self.copyFrom(ctx)
+
+        def expression(self):
+            return self.getTypedRuleContext(c2llvmParser.ExpressionContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterNeg" ):
+                listener.enterNeg(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitNeg" ):
+                listener.exitNeg(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNeg" ):
+                return visitor.visitNeg(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class ArrayItemContext(ExpressionContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def vArrayItem(self):
+            return self.getTypedRuleContext(c2llvmParser.VArrayItemContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterArrayItem" ):
+                listener.enterArrayItem(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitArrayItem" ):
+                listener.exitArrayItem(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitArrayItem" ):
+                return visitor.visitArrayItem(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class MulDivModContext(ExpressionContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
+            super().__init__(parser)
+            self.op = None # Token
+            self.copyFrom(ctx)
+
+        def expression(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(c2llvmParser.ExpressionContext)
+            else:
+                return self.getTypedRuleContext(c2llvmParser.ExpressionContext,i)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterMulDivMod" ):
+                listener.enterMulDivMod(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitMulDivMod" ):
+                listener.exitMulDivMod(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMulDivMod" ):
+                return visitor.visitMulDivMod(self)
+            else:
+                return visitor.visitChildren(self)
+
+
     class CharContext(ExpressionContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
@@ -2913,6 +2991,31 @@ class c2llvmParser ( Parser ):
         def accept(self, visitor:ParseTreeVisitor):
             if hasattr( visitor, "visitAnd" ):
                 return visitor.visitAnd(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class StructMemberContext(ExpressionContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def vStructMember(self):
+            return self.getTypedRuleContext(c2llvmParser.VStructMemberContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterStructMember" ):
+                listener.enterStructMember(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitStructMember" ):
+                listener.exitStructMember(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitStructMember" ):
+                return visitor.visitStructMember(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -2971,58 +3074,6 @@ class c2llvmParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class DoubleContext(ExpressionContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
-            super().__init__(parser)
-            self.op = None # Token
-            self.copyFrom(ctx)
-
-        def vDouble(self):
-            return self.getTypedRuleContext(c2llvmParser.VDoubleContext,0)
-
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterDouble" ):
-                listener.enterDouble(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitDouble" ):
-                listener.exitDouble(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitDouble" ):
-                return visitor.visitDouble(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class IntContext(ExpressionContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
-            super().__init__(parser)
-            self.op = None # Token
-            self.copyFrom(ctx)
-
-        def vInt(self):
-            return self.getTypedRuleContext(c2llvmParser.VIntContext,0)
-
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterInt" ):
-                listener.enterInt(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitInt" ):
-                listener.exitInt(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitInt" ):
-                return visitor.visitInt(self)
-            else:
-                return visitor.visitChildren(self)
-
-
 
     def expression(self, _p:int=0):
         _parentctx = self._ctx
@@ -3034,7 +3085,7 @@ class c2llvmParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 390
+            self.state = 392
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,39,self._ctx)
             if la_ == 1:
@@ -3057,68 +3108,84 @@ class c2llvmParser ( Parser ):
                 self.state = 377
                 localctx.op = self.match(c2llvmParser.T__20)
                 self.state = 378
-                self.expression(11)
+                self.expression(13)
                 pass
 
             elif la_ == 3:
-                localctx = c2llvmParser.IntContext(self, localctx)
+                localctx = c2llvmParser.ArrayItemContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 380
-                self._errHandler.sync(self)
-                _la = self._input.LA(1)
-                if _la==c2llvmParser.T__25:
-                    self.state = 379
-                    localctx.op = self.match(c2llvmParser.T__25)
-
-
-                self.state = 382
-                self.vInt()
+                self.state = 379
+                self.vArrayItem()
                 pass
 
             elif la_ == 4:
-                localctx = c2llvmParser.DoubleContext(self, localctx)
+                localctx = c2llvmParser.StructMemberContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 384
-                self._errHandler.sync(self)
-                _la = self._input.LA(1)
-                if _la==c2llvmParser.T__25:
-                    self.state = 383
-                    localctx.op = self.match(c2llvmParser.T__25)
-
-
-                self.state = 386
-                self.vDouble()
+                self.state = 380
+                self.vStructMember()
                 pass
 
             elif la_ == 5:
-                localctx = c2llvmParser.CharContext(self, localctx)
+                localctx = c2llvmParser.IntContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 387
-                self.vChar()
+                self.state = 382
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                if _la==c2llvmParser.T__25:
+                    self.state = 381
+                    localctx.op = self.match(c2llvmParser.T__25)
+
+
+                self.state = 384
+                self.vInt()
                 pass
 
             elif la_ == 6:
-                localctx = c2llvmParser.IdContext(self, localctx)
+                localctx = c2llvmParser.DoubleContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
+                self.state = 386
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                if _la==c2llvmParser.T__25:
+                    self.state = 385
+                    localctx.op = self.match(c2llvmParser.T__25)
+
+
                 self.state = 388
-                self.vId()
+                self.vDouble()
                 pass
 
             elif la_ == 7:
-                localctx = c2llvmParser.FunctionExprContext(self, localctx)
+                localctx = c2llvmParser.CharContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
                 self.state = 389
+                self.vChar()
+                pass
+
+            elif la_ == 8:
+                localctx = c2llvmParser.IdContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+                self.state = 390
+                self.vId()
+                pass
+
+            elif la_ == 9:
+                localctx = c2llvmParser.FunctionExprContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+                self.state = 391
                 self.funcExpression()
                 pass
 
 
             self._ctx.stop = self._input.LT(-1)
-            self.state = 409
+            self.state = 411
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input,41,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
@@ -3126,17 +3193,17 @@ class c2llvmParser ( Parser ):
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
-                    self.state = 407
+                    self.state = 409
                     self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,40,self._ctx)
                     if la_ == 1:
                         localctx = c2llvmParser.MulDivModContext(self, c2llvmParser.ExpressionContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 392
-                        if not self.precpred(self._ctx, 10):
+                        self.state = 394
+                        if not self.precpred(self._ctx, 12):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 10)")
-                        self.state = 393
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 12)")
+                        self.state = 395
                         localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
                         if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << c2llvmParser.T__21) | (1 << c2llvmParser.T__22) | (1 << c2llvmParser.T__23))) != 0)):
@@ -3144,18 +3211,18 @@ class c2llvmParser ( Parser ):
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
-                        self.state = 394
-                        self.expression(11)
+                        self.state = 396
+                        self.expression(13)
                         pass
 
                     elif la_ == 2:
                         localctx = c2llvmParser.AddSubContext(self, c2llvmParser.ExpressionContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 395
-                        if not self.precpred(self._ctx, 9):
+                        self.state = 397
+                        if not self.precpred(self._ctx, 11):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 9)")
-                        self.state = 396
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 11)")
+                        self.state = 398
                         localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
                         if not(_la==c2llvmParser.T__24 or _la==c2llvmParser.T__25):
@@ -3163,18 +3230,18 @@ class c2llvmParser ( Parser ):
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
-                        self.state = 397
-                        self.expression(10)
+                        self.state = 399
+                        self.expression(12)
                         pass
 
                     elif la_ == 3:
                         localctx = c2llvmParser.CompareContext(self, c2llvmParser.ExpressionContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 398
-                        if not self.precpred(self._ctx, 8):
+                        self.state = 400
+                        if not self.precpred(self._ctx, 10):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 8)")
-                        self.state = 399
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 10)")
+                        self.state = 401
                         localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
                         if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << c2llvmParser.T__1) | (1 << c2llvmParser.T__2) | (1 << c2llvmParser.T__26) | (1 << c2llvmParser.T__27) | (1 << c2llvmParser.T__28) | (1 << c2llvmParser.T__29))) != 0)):
@@ -3182,38 +3249,38 @@ class c2llvmParser ( Parser ):
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
-                        self.state = 400
-                        self.expression(9)
+                        self.state = 402
+                        self.expression(11)
                         pass
 
                     elif la_ == 4:
                         localctx = c2llvmParser.AndContext(self, c2llvmParser.ExpressionContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 401
-                        if not self.precpred(self._ctx, 7):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 7)")
-                        self.state = 402
-                        self.match(c2llvmParser.T__30)
                         self.state = 403
-                        self.expression(8)
+                        if not self.precpred(self._ctx, 9):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 9)")
+                        self.state = 404
+                        self.match(c2llvmParser.T__30)
+                        self.state = 405
+                        self.expression(10)
                         pass
 
                     elif la_ == 5:
                         localctx = c2llvmParser.OrContext(self, c2llvmParser.ExpressionContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 404
-                        if not self.precpred(self._ctx, 6):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 6)")
-                        self.state = 405
-                        self.match(c2llvmParser.T__31)
                         self.state = 406
-                        self.expression(7)
+                        if not self.precpred(self._ctx, 8):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 8)")
+                        self.state = 407
+                        self.match(c2llvmParser.T__31)
+                        self.state = 408
+                        self.expression(9)
                         pass
 
              
-                self.state = 411
+                self.state = 413
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,41,self._ctx)
 
@@ -3260,7 +3327,7 @@ class c2llvmParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 412
+            self.state = 414
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << c2llvmParser.T__32) | (1 << c2llvmParser.T__33) | (1 << c2llvmParser.T__34) | (1 << c2llvmParser.T__35))) != 0)):
                 self._errHandler.recoverInline(self)
@@ -3311,7 +3378,7 @@ class c2llvmParser ( Parser ):
         self.enterRule(localctx, 64, self.RULE_vInt)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 414
+            self.state = 416
             self.match(c2llvmParser.INT)
         except RecognitionException as re:
             localctx.exception = re
@@ -3357,7 +3424,7 @@ class c2llvmParser ( Parser ):
         self.enterRule(localctx, 66, self.RULE_vChar)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 416
+            self.state = 418
             self.match(c2llvmParser.CHAR)
         except RecognitionException as re:
             localctx.exception = re
@@ -3403,7 +3470,7 @@ class c2llvmParser ( Parser ):
         self.enterRule(localctx, 68, self.RULE_vDouble)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 418
+            self.state = 420
             self.match(c2llvmParser.DOUBLE)
         except RecognitionException as re:
             localctx.exception = re
@@ -3449,7 +3516,7 @@ class c2llvmParser ( Parser ):
         self.enterRule(localctx, 70, self.RULE_vString)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 420
+            self.state = 422
             self.match(c2llvmParser.STRING)
         except RecognitionException as re:
             localctx.exception = re
@@ -3495,7 +3562,7 @@ class c2llvmParser ( Parser ):
         self.enterRule(localctx, 72, self.RULE_vId)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 422
+            self.state = 424
             self.match(c2llvmParser.ID)
         except RecognitionException as re:
             localctx.exception = re
@@ -3542,9 +3609,9 @@ class c2llvmParser ( Parser ):
         self.enterRule(localctx, 74, self.RULE_vStruct)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 424
+            self.state = 426
             self.match(c2llvmParser.T__36)
-            self.state = 425
+            self.state = 427
             self.vId()
         except RecognitionException as re:
             localctx.exception = re
@@ -3595,13 +3662,13 @@ class c2llvmParser ( Parser ):
         self.enterRule(localctx, 76, self.RULE_vArray)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 427
-            self.vId()
-            self.state = 428
-            self.match(c2llvmParser.T__17)
             self.state = 429
-            self.vInt()
+            self.vId()
             self.state = 430
+            self.match(c2llvmParser.T__17)
+            self.state = 431
+            self.vInt()
+            self.state = 432
             self.match(c2llvmParser.T__18)
         except RecognitionException as re:
             localctx.exception = re
@@ -3625,23 +3692,23 @@ class c2llvmParser ( Parser ):
 
     def expression_sempred(self, localctx:ExpressionContext, predIndex:int):
             if predIndex == 0:
-                return self.precpred(self._ctx, 10)
+                return self.precpred(self._ctx, 12)
          
 
             if predIndex == 1:
-                return self.precpred(self._ctx, 9)
+                return self.precpred(self._ctx, 11)
          
 
             if predIndex == 2:
-                return self.precpred(self._ctx, 8)
+                return self.precpred(self._ctx, 10)
          
 
             if predIndex == 3:
-                return self.precpred(self._ctx, 7)
+                return self.precpred(self._ctx, 9)
          
 
             if predIndex == 4:
-                return self.precpred(self._ctx, 6)
+                return self.precpred(self._ctx, 8)
          
 
 

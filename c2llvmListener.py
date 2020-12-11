@@ -278,24 +278,6 @@ class c2llvmListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by c2llvmParser#Neg.
-    def enterNeg(self, ctx:c2llvmParser.NegContext):
-        pass
-
-    # Exit a parse tree produced by c2llvmParser#Neg.
-    def exitNeg(self, ctx:c2llvmParser.NegContext):
-        pass
-
-
-    # Enter a parse tree produced by c2llvmParser#MulDivMod.
-    def enterMulDivMod(self, ctx:c2llvmParser.MulDivModContext):
-        pass
-
-    # Exit a parse tree produced by c2llvmParser#MulDivMod.
-    def exitMulDivMod(self, ctx:c2llvmParser.MulDivModContext):
-        pass
-
-
     # Enter a parse tree produced by c2llvmParser#FunctionExpr.
     def enterFunctionExpr(self, ctx:c2llvmParser.FunctionExprContext):
         pass
@@ -332,6 +314,51 @@ class c2llvmListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by c2llvmParser#Double.
+    def enterDouble(self, ctx:c2llvmParser.DoubleContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#Double.
+    def exitDouble(self, ctx:c2llvmParser.DoubleContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#Int.
+    def enterInt(self, ctx:c2llvmParser.IntContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#Int.
+    def exitInt(self, ctx:c2llvmParser.IntContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#Neg.
+    def enterNeg(self, ctx:c2llvmParser.NegContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#Neg.
+    def exitNeg(self, ctx:c2llvmParser.NegContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#ArrayItem.
+    def enterArrayItem(self, ctx:c2llvmParser.ArrayItemContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#ArrayItem.
+    def exitArrayItem(self, ctx:c2llvmParser.ArrayItemContext):
+        pass
+
+
+    # Enter a parse tree produced by c2llvmParser#MulDivMod.
+    def enterMulDivMod(self, ctx:c2llvmParser.MulDivModContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#MulDivMod.
+    def exitMulDivMod(self, ctx:c2llvmParser.MulDivModContext):
+        pass
+
+
     # Enter a parse tree produced by c2llvmParser#Char.
     def enterChar(self, ctx:c2llvmParser.CharContext):
         pass
@@ -350,6 +377,15 @@ class c2llvmListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by c2llvmParser#structMember.
+    def enterStructMember(self, ctx:c2llvmParser.StructMemberContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#structMember.
+    def exitStructMember(self, ctx:c2llvmParser.StructMemberContext):
+        pass
+
+
     # Enter a parse tree produced by c2llvmParser#Compare.
     def enterCompare(self, ctx:c2llvmParser.CompareContext):
         pass
@@ -365,24 +401,6 @@ class c2llvmListener(ParseTreeListener):
 
     # Exit a parse tree produced by c2llvmParser#Id.
     def exitId(self, ctx:c2llvmParser.IdContext):
-        pass
-
-
-    # Enter a parse tree produced by c2llvmParser#Double.
-    def enterDouble(self, ctx:c2llvmParser.DoubleContext):
-        pass
-
-    # Exit a parse tree produced by c2llvmParser#Double.
-    def exitDouble(self, ctx:c2llvmParser.DoubleContext):
-        pass
-
-
-    # Enter a parse tree produced by c2llvmParser#Int.
-    def enterInt(self, ctx:c2llvmParser.IntContext):
-        pass
-
-    # Exit a parse tree produced by c2llvmParser#Int.
-    def exitInt(self, ctx:c2llvmParser.IntContext):
         pass
 
 
