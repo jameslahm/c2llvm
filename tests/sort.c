@@ -4,8 +4,8 @@
 
 int main()
 {
-    char s[10];
-    int n[10];
+    char s[100];
+    int n[100];
     int num = 0;
     gets(s);
 
