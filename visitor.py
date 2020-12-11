@@ -121,7 +121,9 @@ class Visitor(c2llvmVisitor):
                     v_types.append(ir.ArrayType(v_type,res['length']))
                 else:
                     print("Struct Member Declaration Error")
-        
+
+            return v_types,v_names
+
         else:
             print("Error")
 
