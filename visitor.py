@@ -651,6 +651,10 @@ class Visitor(c2llvmVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by c2llvmParser#funcExpression.
+    def visitFuncExpression(self, ctx:c2llvmParser.FuncExpressionContext):
+        return self.visitChildren(ctx)
+
     # Visit a parse tree produced by c2llvmParser#paramsInvokePattern.
     def visitParamsInvokePattern(self, ctx:c2llvmParser.ParamsInvokePatternContext):
         return self.visitChildren(ctx)

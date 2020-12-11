@@ -224,6 +224,15 @@ class c2llvmListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by c2llvmParser#funcExpression.
+    def enterFuncExpression(self, ctx:c2llvmParser.FuncExpressionContext):
+        pass
+
+    # Exit a parse tree produced by c2llvmParser#funcExpression.
+    def exitFuncExpression(self, ctx:c2llvmParser.FuncExpressionContext):
+        pass
+
+
     # Enter a parse tree produced by c2llvmParser#paramsInvokePattern.
     def enterParamsInvokePattern(self, ctx:c2llvmParser.ParamsInvokePatternContext):
         pass
