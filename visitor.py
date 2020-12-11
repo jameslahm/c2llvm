@@ -447,6 +447,7 @@ class Visitor(c2llvmVisitor):
 
     # Visit a parse tree produced by c2llvmParser#variableDefinitionStatement.
     def visitVariableDefinitionStatement(self, ctx:c2llvmParser.VariableDefinitionStatementContext):
+        print(ctx.getText())
         if (len(self.blocks)==0):
             v_type = self.visit(ctx.getChild(0))
 
@@ -455,6 +456,8 @@ class Visitor(c2llvmVisitor):
 
             while(index<total):
                 v_name = ctx.getChild(index).getText()
+
+                print("Global Variable Definition: ",v_name)
                 self.insert_symbol_table(v_name)
 
                 tmp_var = ir.GlobalVariable(self.module,v_type,name=v_name)
@@ -481,6 +484,9 @@ class Visitor(c2llvmVisitor):
         total = ctx.getChildCount()
         while index < total:
             v_name = ctx.getChild(index).getText()
+            print("Local Variable Definition ",v_name,index)
+
+
             self.insert_symbol_table(v_name)
 
             if v_name in local_var_list:
@@ -493,7 +499,7 @@ class Visitor(c2llvmVisitor):
             }
 
             if ctx.getChild(index+1).getText()!='=':
-                index+2
+                index+=2
             else:
                 res = self.visit(ctx.getChild(index+2))
                 res = self.convertToType(res,v_type)
@@ -510,6 +516,8 @@ class Visitor(c2llvmVisitor):
 
         if len(self.blocks) == 0:
             self.insert_symbol_table(v_name)
+            print("Global Array Definition: ",v_name)
+
             if v_name in self.global_vars:
                 print("Error")
             tmp_var = ir.GlobalVariable(self.module,ir.ArrayType(v_type,array_len))
@@ -523,6 +531,7 @@ class Visitor(c2llvmVisitor):
         builder = self.builders[-1]
         local_var_list = self.local_vars[-1]
         self.insert_symbol_table(v_name)
+        print("Local Array Definition: ",v_name)
         if v_name in self.local_vars:
             print("Error")
             return 
@@ -544,6 +553,7 @@ class Visitor(c2llvmVisitor):
         if ctx.getChild(1).getChildCount() == 1:
             v_name = ctx.getChild(1).getText()
             self.insert_symbol_table(v_name)
+            print("Gloabl Struct Definition: ",v_name)
             if len(self.blocks)==0:
                 if v_name in self.global_vars:
                     print("Error")
@@ -573,6 +583,7 @@ class Visitor(c2llvmVisitor):
 
             v_type = ir.ArrayType(v_type,res['length'])
             self.insert_symbol_table(v_name)
+            print("Local Struct Definition: ",v_name)
 
             if len(self.blocks)==0:
                 if v_name in self.global_vars:
@@ -705,6 +716,10 @@ class Visitor(c2llvmVisitor):
 
             args = self.visit(ctx.getChild(2))
             args[0] = builder.gep(args[0]['name'],[zero_base,zero_base],inbounds=True)
+
+            for index in range(1,len(args)):
+                args[index] = args[index]['name']
+
             ret = builder.call(printf,args)
             
             return {
@@ -846,6 +861,7 @@ class Visitor(c2llvmVisitor):
         v_type = self.visit(ctx.getChild(0))
         v_name = ctx.getChild(1).getText()
         self.insert_symbol_table(v_name)
+        print("Param Definition Pattern: ",v_name)
         return {
             'type':v_type,
             'name':v_name
@@ -855,7 +871,7 @@ class Visitor(c2llvmVisitor):
     # Visit a parse tree produced by c2llvmParser#Neg.
     def visitNeg(self, ctx:c2llvmParser.NegContext):
         res = self.visit(ctx.getChild(1))
-        res = self.toBool(res)
+        res = self.toBool(res,flag=0)
         return self.visitChildren(ctx)
 
 
@@ -1155,6 +1171,8 @@ class Visitor(c2llvmVisitor):
 
     
     def insert_symbol_table(self,v_name):
+        print("Insert Symbol Table")
+        print(self.symbol_table)
         if not v_name in self.symbol_table:
             self.symbol_table[v_name] = [self.scope]
         elif self.symbol_table[v_name][-1] == self.scope:
@@ -1164,14 +1182,14 @@ class Visitor(c2llvmVisitor):
     
     def check_var_define(self,v_name):
         if not v_name in self.symbol_table:
-            print("Check Var Define Error")
+            print("Check Var Define Error",v_name)
             return False,
-        if self.symbol_table[v_name][0]< self.scope:
-            print("Check Var Define Error")
+        if self.symbol_table[v_name][0]> self.scope:
+            print("Check Var Define Error",v_name)
             return False
         return True
     
-    def toBool(self,res,flag = 0):
+    def toBool(self,res,flag = 1):
         op = '=='
         if flag:
             op = '!='
@@ -1191,8 +1209,10 @@ class Visitor(c2llvmVisitor):
                 'constant':False,
                 'name':tmp_var
             }
+        elif res['type']==int1:
+            return res
         else:
-            print("toBool Error")
+            print("toBool Error",res)
             return res
     
     def isInteger(self,res):

@@ -2,13 +2,11 @@
 #include <stdlib.h>
 
 void hello(int a){
-    printf("hello\n");
 	return;
 }
 
 int main()
 {
-    hello(1);
-	printf("hello\n");	
+	printf("%d",1);	
 	return 0;
 }
