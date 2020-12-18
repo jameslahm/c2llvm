@@ -172,10 +172,11 @@ class Visitor(c2llvmVisitor):
 
         self.end_condition_block = end_condition_block_backup
 
-        self.blocks.pop()
+        block = self.blocks.pop()
         builder = self.builders.pop()
 
-        builder.branch(end_condition_block)
+        if not block.is_terminated:
+            builder.branch(end_condition_block)
 
         self.blocks.append(end_condition_block)
         self.builders.append(ir.IRBuilder(end_condition_block))
@@ -203,8 +204,9 @@ class Visitor(c2llvmVisitor):
         for index in range(5, ctx.getChildCount()-1):
             self.visit(ctx.getChild(index))
 
-        builder = self.builders[-1]
-        builder.branch(self.end_condition_block)
+        if not self.blocks[-1].is_terminated:
+            builder = self.builders[-1]
+            builder.branch(self.end_condition_block)
 
         self.blocks.pop()
         self.builders.pop()
@@ -238,8 +240,9 @@ class Visitor(c2llvmVisitor):
         for index in range(6, ctx.getChildCount()-1):
             self.visit(ctx.getChild(index))
 
-        builder = self.builders[-1]
-        builder.branch(self.end_condition_block)
+        if not self.blocks[-1].is_terminated:
+            builder = self.builders[-1]
+            builder.branch(self.end_condition_block)
 
         self.blocks.pop()
         self.builders.pop()

@@ -38,7 +38,7 @@ int main()
         }
         if (j == t_len - 1)
         {
-            printf("%d\n", i - j);
+            printf("%d,", i - j);
             flag = 1;
             j = next[j];
         }
@@ -46,6 +46,9 @@ int main()
     if (flag == 0)
     {
         printf("No Match\n");
+    }
+    else{
+        printf("\n");
     }
 
     return 0;

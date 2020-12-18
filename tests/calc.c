@@ -26,7 +26,19 @@ int main()
     int k = 1;
     while (i >= 0)
     {
-        if (expr[i] == '+')
+        if (expr[i] == '*')
+        {
+            ops_index = ops_index + 1;
+            ops[ops_index] = '*';
+            i = i - 1;
+        }
+        else if (expr[i] == '/')
+        {
+            ops_index = ops_index + 1;
+            ops[ops_index] = '/';
+            i = i - 1;
+        }
+        else if (expr[i] == '+')
         {
             while (ops_index >= 0 && ((ops[ops_index] == '*') || (ops[ops_index] == '/')))
             {
@@ -64,24 +76,6 @@ int main()
             ops[ops_index] = '-';
             i = i - 1;
         }
-        else if (expr[i] == '*')
-        {
-            ops_index = ops_index + 1;
-            ops[ops_index] = '*';
-            i = i - 1;
-        }
-        else if (expr[i] == '/')
-        {
-            ops_index = ops_index + 1;
-            ops[ops_index] = '/';
-            i = i - 1;
-        }
-        else if (expr[i] == ')')
-        {
-            ops_index = ops_index + 1;
-            ops[ops_index] = ')';
-            i = i - 1;
-        }
         else if (expr[i] == '(')
         {
             while (ops[ops_index] != ')')
@@ -107,6 +101,12 @@ int main()
                 nums_index = nums_index - 1;
             }
             ops_index = ops_index - 1;
+            i = i - 1;
+        }
+        else if (expr[i] == ')')
+        {
+            ops_index = ops_index + 1;
+            ops[ops_index] = ')';
             i = i - 1;
         }
         else
