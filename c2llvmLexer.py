@@ -200,7 +200,7 @@ class c2llvmLexer(Lexer):
     CHAR = 40
     STRING = 41
     INT = 42
-    LIB = 43
+    HEADER = 43
     Conjunction = 44
     Operator = 45
     LineComment = 46
@@ -219,7 +219,7 @@ class c2llvmLexer(Lexer):
             "'&&'", "'||'", "'int'", "'double'", "'char'", "'void'", "'struct'" ]
 
     symbolicNames = [ "<INVALID>",
-            "ID", "DOUBLE", "CHAR", "STRING", "INT", "LIB", "Conjunction", 
+            "ID", "DOUBLE", "CHAR", "STRING", "INT", "HEADER", "Conjunction", 
             "Operator", "LineComment", "BlockComment", "WS" ]
 
     ruleNames = [ "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", 
@@ -228,7 +228,7 @@ class c2llvmLexer(Lexer):
                   "T__20", "T__21", "T__22", "T__23", "T__24", "T__25", 
                   "T__26", "T__27", "T__28", "T__29", "T__30", "T__31", 
                   "T__32", "T__33", "T__34", "T__35", "T__36", "ID", "DOUBLE", 
-                  "CHAR", "STRING", "INT", "LIB", "Conjunction", "Operator", 
+                  "CHAR", "STRING", "INT", "HEADER", "Conjunction", "Operator", 
                   "LineComment", "BlockComment", "WS" ]
 
     grammarFileName = "c2llvm.g4"

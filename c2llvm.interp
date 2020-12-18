@@ -93,7 +93,7 @@ DOUBLE
 CHAR
 STRING
 INT
-LIB
+HEADER
 Conjunction
 Operator
 LineComment

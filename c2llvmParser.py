@@ -238,7 +238,7 @@ class c2llvmParser ( Parser ):
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "ID", "DOUBLE", "CHAR", 
-                      "STRING", "INT", "LIB", "Conjunction", "Operator", 
+                      "STRING", "INT", "HEADER", "Conjunction", "Operator", 
                       "LineComment", "BlockComment", "WS" ]
 
     RULE_prog = 0
@@ -336,7 +336,7 @@ class c2llvmParser ( Parser ):
     CHAR=40
     STRING=41
     INT=42
-    LIB=43
+    HEADER=43
     Conjunction=44
     Operator=45
     LineComment=46
@@ -453,8 +453,8 @@ class c2llvmParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def LIB(self):
-            return self.getToken(c2llvmParser.LIB, 0)
+        def HEADER(self):
+            return self.getToken(c2llvmParser.HEADER, 0)
 
         def getRuleIndex(self):
             return c2llvmParser.RULE_include
@@ -487,7 +487,7 @@ class c2llvmParser ( Parser ):
             self.state = 92
             self.match(c2llvmParser.T__1)
             self.state = 93
-            self.match(c2llvmParser.LIB)
+            self.match(c2llvmParser.HEADER)
             self.state = 94
             self.match(c2llvmParser.T__2)
         except RecognitionException as re:
@@ -2713,7 +2713,6 @@ class c2llvmParser ( Parser ):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
             super().__init__(parser)
-            self.op = None # Token
             self.copyFrom(ctx)
 
         def expression(self, i:int=None):
@@ -2792,7 +2791,6 @@ class c2llvmParser ( Parser ):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
             super().__init__(parser)
-            self.op = None # Token
             self.copyFrom(ctx)
 
         def vDouble(self):
@@ -2818,7 +2816,6 @@ class c2llvmParser ( Parser ):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
             super().__init__(parser)
-            self.op = None # Token
             self.copyFrom(ctx)
 
         def vInt(self):
@@ -2844,7 +2841,6 @@ class c2llvmParser ( Parser ):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
             super().__init__(parser)
-            self.op = None # Token
             self.copyFrom(ctx)
 
         def expression(self):
@@ -2895,7 +2891,6 @@ class c2llvmParser ( Parser ):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
             super().__init__(parser)
-            self.op = None # Token
             self.copyFrom(ctx)
 
         def expression(self, i:int=None):
@@ -3002,7 +2997,6 @@ class c2llvmParser ( Parser ):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a c2llvmParser.ExpressionContext
             super().__init__(parser)
-            self.op = None # Token
             self.copyFrom(ctx)
 
         def expression(self, i:int=None):
@@ -3084,7 +3078,7 @@ class c2llvmParser ( Parser ):
                 self._ctx = localctx
                 _prevctx = localctx
                 self.state = 372
-                localctx.op = self.match(c2llvmParser.T__20)
+                self.match(c2llvmParser.T__20)
                 self.state = 373
                 self.expression(14)
                 pass
@@ -3114,7 +3108,7 @@ class c2llvmParser ( Parser ):
                 _la = self._input.LA(1)
                 if _la==c2llvmParser.T__25:
                     self.state = 376
-                    localctx.op = self.match(c2llvmParser.T__25)
+                    self.match(c2llvmParser.T__25)
 
 
                 self.state = 379
@@ -3130,7 +3124,7 @@ class c2llvmParser ( Parser ):
                 _la = self._input.LA(1)
                 if _la==c2llvmParser.T__25:
                     self.state = 380
-                    localctx.op = self.match(c2llvmParser.T__25)
+                    self.match(c2llvmParser.T__25)
 
 
                 self.state = 383
@@ -3190,10 +3184,9 @@ class c2llvmParser ( Parser ):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 13)")
                         self.state = 391
-                        localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
                         if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << c2llvmParser.T__21) | (1 << c2llvmParser.T__22) | (1 << c2llvmParser.T__23))) != 0)):
-                            localctx.op = self._errHandler.recoverInline(self)
+                            self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
@@ -3209,10 +3202,9 @@ class c2llvmParser ( Parser ):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 12)")
                         self.state = 394
-                        localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
                         if not(_la==c2llvmParser.T__24 or _la==c2llvmParser.T__25):
-                            localctx.op = self._errHandler.recoverInline(self)
+                            self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
@@ -3228,10 +3220,9 @@ class c2llvmParser ( Parser ):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 11)")
                         self.state = 397
-                        localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
                         if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << c2llvmParser.T__1) | (1 << c2llvmParser.T__2) | (1 << c2llvmParser.T__26) | (1 << c2llvmParser.T__27) | (1 << c2llvmParser.T__28) | (1 << c2llvmParser.T__29))) != 0)):
-                            localctx.op = self._errHandler.recoverInline(self)
+                            self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()

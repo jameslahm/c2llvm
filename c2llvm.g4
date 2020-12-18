@@ -2,7 +2,7 @@ grammar c2llvm;
 
 prog: (include)* (declaration | statement)*;
 
-include: '#include' '<' LIB '>';
+include: '#include' '<' HEADER '>';
 
 declaration: functionDeclaration | structDeclaration;
 
@@ -94,16 +94,16 @@ paramDefinitionPattern: vType vId;
 
 expression:
 	'(' expression ')' #Parens
-	| op = '!' expression #Neg
-	| expression op = ('*' | '/' | '%') expression #MulDivMod
-	| expression op = ('+' | '-') expression #AddSub
-	| expression op = ('==' | '!=' | '>=' | '>' | '<' | '<=') expression #Compare
+	| '!' expression #Neg
+	| expression ('*' | '/' | '%') expression #MulDivMod
+	| expression ('+' | '-') expression #AddSub
+	| expression ('==' | '!=' | '>=' | '>' | '<' | '<=') expression #Compare
 	| expression '&&' expression #And
 	| expression '||' expression #Or
 	| vArrayItem     #ArrayItem
 	| vStructMember  #structMember
-	| (op = '-')? vInt #Int
-	| (op = '-')? vDouble #Double
+	| ('-')? vInt #Int
+	| ('-')? vDouble #Double
 	| vChar #Char
 	| vString #String
 	| vId #Id
@@ -125,7 +125,7 @@ DOUBLE: [0-9]+ '.' [0-9]+;
 CHAR: '\'' .'\'';
 STRING: '"' .*? '"';
 INT: [0-9]+;
-LIB: [a-zA-Z]+ '.h'?;
+HEADER: [a-zA-Z]+ '.h'?;
 Conjunction: '&&' | '||';
 Operator:
 	'!'
