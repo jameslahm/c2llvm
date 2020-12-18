@@ -144,7 +144,6 @@ class Visitor(c2llvmVisitor):
             tmp_var = builder.load(v_res['name'])
             res = {
                 'type': v_res['type'],
-                'const': False,
                 'name': tmp_var
             }
 
@@ -408,7 +407,6 @@ class Visitor(c2llvmVisitor):
             ret = builder.ret_void()
             return {
                 'type': void,
-                'const': False,
                 'name': ret
             }
 
@@ -416,7 +414,6 @@ class Visitor(c2llvmVisitor):
         ret = builder.ret(res['name'])
         return {
             'type': ret.type,
-            'const': False,
             'name': ret
         }
 
@@ -609,10 +606,9 @@ class Visitor(c2llvmVisitor):
                 tmp_var = builder.load(tmp_var)
 
             return {
+                'struct_name': res['struct_name'] if 'struct_name' in res else None,
                 'type': res['type'].element,
-                'const': False,
-                'name': tmp_var,
-                'struct_name': res['struct_name'] if 'struct_name' in res else None
+                'name': tmp_var
             }
         else:
             pass
@@ -642,7 +638,6 @@ class Visitor(c2llvmVisitor):
 
                 return {
                     'type': self.structures[struct_name]['struct'].elements[index],
-                    'const': False,
                     'name': tmp_var
                 }
             else:
@@ -668,7 +663,6 @@ class Visitor(c2llvmVisitor):
 
                 return {
                     'type': self.structures[struct_name]['struct'].elements[index],
-                    'const': False,
                     'name': tmp_var
                 }
             else:
@@ -701,7 +695,6 @@ class Visitor(c2llvmVisitor):
 
             return {
                 'type': int32,
-                'const': False,
                 'name': ret
             }
 
@@ -721,7 +714,6 @@ class Visitor(c2llvmVisitor):
 
             return {
                 'type': int32,
-                'const': False,
                 'name': ret
             }
 
@@ -741,7 +733,6 @@ class Visitor(c2llvmVisitor):
 
             return {
                 'type': int32,
-                'const': False,
                 'name': ret
             }
 
@@ -761,7 +752,6 @@ class Visitor(c2llvmVisitor):
             tmp_var = builder.call(func, params)
             return {
                 'type': func.function_type.return_type,
-                'const': False,
                 'name': tmp_var
             }
         else:
@@ -862,7 +852,6 @@ class Visitor(c2llvmVisitor):
             logger.error("MulDivMod Error")
         return {
             'type': lres['type'],
-            'const': False,
             'name': tmp_var
         }
 
@@ -881,7 +870,6 @@ class Visitor(c2llvmVisitor):
 
         return {
             'type': lres['type'],
-            'const': False,
             'name': res
         }
 
@@ -908,7 +896,6 @@ class Visitor(c2llvmVisitor):
         res = builder.and_(lres['name'], rres['name'])
         return {
             'type': lres['type'],
-            'const': False,
             'name': res
         }
 
@@ -931,7 +918,6 @@ class Visitor(c2llvmVisitor):
             logger.error("Compare Error")
         return {
             'type': int8,
-            'const': False,
             'name': tmp_var
         }
 
@@ -989,7 +975,6 @@ class Visitor(c2llvmVisitor):
             logger.error("AddSub Error")
         return {
             'type': lres['type'],
-            'const': False,
             'name': tmp_var
         }
 
@@ -1012,7 +997,6 @@ class Visitor(c2llvmVisitor):
     def visitVInt(self, ctx: c2llvmParser.VIntContext):
         return {
             'type': int32,
-            'const': True,
             'name': ir.Constant(int32, int(ctx.getText()))
         }
 
@@ -1021,7 +1005,6 @@ class Visitor(c2llvmVisitor):
     def visitVChar(self, ctx: c2llvmParser.VCharContext):
         return {
             'type': int8,
-            'const': True,
             'name': ir.Constant(int8, ord(ctx.getText()[1]))
         }
 
@@ -1029,7 +1012,6 @@ class Visitor(c2llvmVisitor):
     def visitVDouble(self, ctx: c2llvmParser.VDoubleContext):
         return {
             'type': double,
-            'const': True,
             'name': ir.Constant(double, float(ctx.getText()))
         }
 
@@ -1048,7 +1030,6 @@ class Visitor(c2llvmVisitor):
             int8, v_len), bytearray(v_string, 'utf-8'))
         return {
             'type': ir.ArrayType(int8, v_len),
-            'const': True,
             'name': v_name
         }
 
@@ -1058,7 +1039,6 @@ class Visitor(c2llvmVisitor):
         if not self.check_var_define(v_name):
             return {
                 'type': int32,
-                'const': False,
                 'name': ir.Constant(int32, 0)
             }
         builder = self.builders[-1]
@@ -1068,14 +1048,12 @@ class Visitor(c2llvmVisitor):
                     tmp_var = builder.load(local_var_list[v_name]['name'])
                     return {
                         'type': local_var_list[v_name]['type'],
-                        'const': False,
                         'name': tmp_var,
                         'struct_name': local_var_list[v_name]['struct_name'] if 'struct_name' in local_var_list[v_name] else None
                     }
                 else:
                     return {
                         'type': local_var_list[v_name]['type'],
-                        'const': False,
                         'name': local_var_list[v_name]['name'],
                         'struct_name': local_var_list[v_name]['struct_name'] if 'struct_name' in local_var_list[v_name] else None
                     }
@@ -1085,23 +1063,16 @@ class Visitor(c2llvmVisitor):
                 tmp_var = builder.load(self.global_vars[v_name]['name'])
                 return {
                     'type': self.global_vars[v_name]['type'],
-                    'const': False,
                     'name': tmp_var,
                     'struct_name': self.global_vars[v_name]['struct_name'] if 'struct_name' in self.global_vars[v_name] else None
                 }
             else:
                 return {
                     'type': self.global_vars[v_name]['type'],
-                    'const': False,
                     'name': self.global_vars[v_name]['name'],
                     'struct_name': self.global_vars[v_name]['struct_name'] if 'struct_name' in self.global_vars[v_name] else None
                 }
         logger.error("VId Error")
-        return {
-            'type': void,
-            'const': False,
-            'name': ir.Constant(void, None)
-        }
 
     # Visit a parse tree produced by c2llvmParser#vStruct.
     def visitVStruct(self, ctx: c2llvmParser.VStructContext):
@@ -1155,7 +1126,6 @@ class Visitor(c2llvmVisitor):
                 op, res['name'], ir.Constant(res['type'], 0))
             return {
                 'type': int1,
-                'constant': False,
                 'name': tmp_var
             }
         elif res['type'] == double:
@@ -1163,7 +1133,6 @@ class Visitor(c2llvmVisitor):
                 op, res['name'], ir.Constant(res['type'], 0))
             return {
                 'type': int1,
-                'constant': False,
                 'name': tmp_var
             }
         elif res['type'] == int1:
@@ -1185,14 +1154,12 @@ class Visitor(c2llvmVisitor):
             tmp_var = builder.sext(res['name'], dtype)
             return {
                 'type': dtype,
-                'const': False,
                 'name': tmp_var
             }
         elif dtype == double:
             tmp_var = builder.sitofp(res['name'], dtype)
             return {
                 'type': dtype,
-                'const': False,
                 'name': tmp_var
             }
         else:
