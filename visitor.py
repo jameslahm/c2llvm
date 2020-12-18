@@ -1,9 +1,6 @@
 # Generated from c2llvm.g4 by ANTLR 4.9
-from os import O_NDELAY, name
 from typing import Dict, List
 from antlr4 import *
-from antlr4.atn.ATNState import StarLoopEntryState
-from llvmlite.ir import builder
 from llvmlite.ir.builder import IRBuilder
 from llvmlite.ir.values import Block, Function
 if __name__ is not None and "." in __name__:
@@ -38,11 +35,10 @@ class Visitor(c2llvmVisitor):
         self.builders: List[IRBuilder] = []
 
         self.local_vars = []
-        self.current_func = ''
 
         self.global_vars = {}
 
-        self.need_load = True
+        self.is_load_var = True
 
         self.structures = dict()
 
@@ -134,11 +130,11 @@ class Visitor(c2llvmVisitor):
         res = self.visit(ctx.getChild(ctx.getChildCount()-2))
 
         for index in reversed(range(0, (ctx.getChildCount() - 2)//2)):
-            need_load_backup = self.need_load
-            self.need_load = False
+            is_load_var_backup = self.is_load_var
+            self.is_load_var = False
 
             v_res = self.visit(ctx.getChild(index*2))
-            self.need_load = need_load_backup
+            self.is_load_var = is_load_var_backup
 
             res = self.convertToType(res, v_res['type'])
             builder.store(res['name'], v_res['name'])
@@ -364,11 +360,11 @@ class Visitor(c2llvmVisitor):
         if ctx.getChildCount() == 0:
             return
 
-        need_load_backup = self.need_load
-        self.need_load = False
+        is_load_var_backup = self.is_load_var
+        self.is_load_var = False
 
         v_res = self.visit(ctx.getChild(0))
-        self.need_load = need_load_backup
+        self.is_load_var = is_load_var_backup
 
         expr_res = self.visit(ctx.getChild(2))
         expr_res = self.convertToType(expr_res, v_res['type'])
@@ -385,10 +381,10 @@ class Visitor(c2llvmVisitor):
         if ctx.getChildCount() == 0:
             return
 
-        need_load_backup = self.need_load
-        self.need_load = False
+        is_load_var_backup = self.is_load_var
+        self.is_load_var = False
         v_res = self.visit(ctx.getChild(0))
-        self.need_load = need_load_backup
+        self.is_load_var = is_load_var_backup
 
         expr_res = self.visit(ctx.getChild(2))
 
@@ -597,24 +593,24 @@ class Visitor(c2llvmVisitor):
     # Visit a parse tree produced by c2llvmParser#vArrayItem.
 
     def visitVArrayItem(self, ctx: c2llvmParser.VArrayItemContext):
-        need_load_backup = self.need_load
-        self.need_load = False
+        is_load_var_backup = self.is_load_var
+        self.is_load_var = False
         res = self.visit(ctx.getChild(0))
-        self.need_load = need_load_backup
+        self.is_load_var = is_load_var_backup
 
         if isinstance(res['type'], ir.types.ArrayType):
             builder = self.builders[-1]
 
-            need_load_backup = self.need_load
-            self.need_load = True
+            is_load_var_backup = self.is_load_var
+            self.is_load_var = True
             index_res = self.visit(ctx.getChild(2))
-            self.need_load = need_load_backup
+            self.is_load_var = is_load_var_backup
 
             zero_base = ir.Constant(int32, 0)
             tmp_var = builder.gep(
                 res['name'], [zero_base, index_res['name']], inbounds=True)
 
-            if self.need_load:
+            if self.is_load_var:
                 tmp_var = builder.load(tmp_var)
 
             return {
@@ -631,10 +627,10 @@ class Visitor(c2llvmVisitor):
         builder = self.builders[-1]
         if ctx.getChild(0).getChildCount() == 1:
             if ctx.getChild(2).getChildCount() == 1:
-                need_loca_backup = self.need_load
-                self.need_load = False
+                need_loca_backup = self.is_load_var
+                self.is_load_var = False
                 res = self.visit(ctx.getChild(0))
-                self.need_load = need_loca_backup
+                self.is_load_var = need_loca_backup
 
                 struct_name = res['struct_name']
                 index = self.structures[struct_name]['members'].index(
@@ -646,7 +642,7 @@ class Visitor(c2llvmVisitor):
                 tmp_var = builder.gep(
                     res['name'], [zero_base, offset], inbounds=True)
 
-                if self.need_load:
+                if self.is_load_var:
                     tmp_var = builder.load(tmp_var)
 
                 return {
@@ -659,10 +655,10 @@ class Visitor(c2llvmVisitor):
 
         else:
             if ctx.getChild(2).getChildCount() == 1:
-                need_load_backup = self.need_load
-                self.need_load = False
+                is_load_var_backup = self.is_load_var
+                self.is_load_var = False
                 res = self.visit(ctx.getChild(0))
-                self.need_load = need_load_backup
+                self.is_load_var = is_load_var_backup
 
                 struct_name = res['struct_name']
                 index = self.structures[struct_name]['members'].index(
@@ -672,7 +668,7 @@ class Visitor(c2llvmVisitor):
                 tmp_var = builder.gep(
                     res['name'], [zero_base, offset], inbounds=True)
 
-                if self.need_load:
+                if self.is_load_var:
                     tmp_var = builder.load(tmp_var)
 
                 return {
@@ -719,10 +715,10 @@ class Visitor(c2llvmVisitor):
             builder = self.builders[-1]
             zero_base = ir.Constant(int32, 0)
 
-            need_load_backup = self.need_load
-            self.need_load = False
+            is_load_var_backup = self.is_load_var
+            self.is_load_var = False
             args = self.visit(ctx.getChild(2))
-            self.need_load = need_load_backup
+            self.is_load_var = is_load_var_backup
 
             args[0] = builder.gep(
                 args[0]['name'], [zero_base, zero_base], inbounds=True)
@@ -739,10 +735,10 @@ class Visitor(c2llvmVisitor):
 
             builder = self.builders[-1]
             zero_base = ir.Constant(int32, 0)
-            need_load_backup = self.need_load
-            self.need_load = False
+            is_load_var_backup = self.is_load_var
+            self.is_load_var = False
             args = self.visit(ctx.getChild(2))
-            self.need_load = need_load_backup
+            self.is_load_var = is_load_var_backup
 
             args[0] = builder.gep(
                 args[0]['name'], [zero_base, zero_base], inbounds=True)
@@ -819,12 +815,10 @@ class Visitor(c2llvmVisitor):
             }
 
         self.local_vars.append(local_var_list)
-        self.current_func = func_name
 
         for index in range(6, ctx.getChildCount()-1):
             self.visit(ctx.getChild(index))
 
-        self.current_func = ""
         self.blocks.pop()
         self.builders.pop()
         self.local_vars.pop()
@@ -1080,7 +1074,7 @@ class Visitor(c2llvmVisitor):
         builder = self.builders[-1]
         for local_var_list in reversed(self.local_vars):
             if v_name in local_var_list:
-                if self.need_load:
+                if self.is_load_var:
                     tmp_var = builder.load(local_var_list[v_name]['name'])
                     return {
                         'type': local_var_list[v_name]['type'],
@@ -1097,7 +1091,7 @@ class Visitor(c2llvmVisitor):
                     }
 
         if v_name in self.global_vars:
-            if self.need_load:
+            if self.is_load_var:
                 tmp_var = builder.load(self.global_vars[v_name]['name'])
                 return {
                     'type': self.global_vars[v_name]['type'],
