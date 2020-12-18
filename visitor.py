@@ -96,7 +96,7 @@ class Visitor(c2llvmVisitor):
             'members': member_names,
             'struct': ir.LiteralStructType(member_types)
         }
-        self.leave_scope()
+        self.exit_scope()
 
     # Visit a parse tree produced by c2llvmParser#structMemberDeclaration.
     def visitStructMemberDeclaration(self, ctx: c2llvmParser.StructMemberDeclarationContext):
@@ -212,7 +212,7 @@ class Visitor(c2llvmVisitor):
 
         self.blocks.append(if_false_block)
         self.builders.append(ir.IRBuilder(if_false_block))
-        self.leave_scope()
+        self.exit_scope()
         return
 
     # Visit a parse tree produced by c2llvmParser#elseifStatement.
@@ -247,7 +247,7 @@ class Visitor(c2llvmVisitor):
 
         self.blocks.append(elseif_false_block)
         self.builders.append(ir.IRBuilder(elseif_false_block))
-        self.leave_scope()
+        self.exit_scope()
         return
 
     # Visit a parse tree produced by c2llvmParser#elseStatement.
@@ -260,7 +260,7 @@ class Visitor(c2llvmVisitor):
             self.visit(ctx.getChild(index))
 
         self.local_vars.pop()
-        self.leave_scope()
+        self.exit_scope()
         return
 
     # Visit a parse tree produced by c2llvmParser#whileStatement.
@@ -303,7 +303,7 @@ class Visitor(c2llvmVisitor):
 
         self.blocks.append(while_end_block)
         self.builders.append(ir.IRBuilder(while_end_block))
-        self.leave_scope()
+        self.exit_scope()
         return
 
     # Visit a parse tree produced by c2llvmParser#forStatement.
@@ -350,7 +350,7 @@ class Visitor(c2llvmVisitor):
 
         self.blocks.append(for_end_block)
         self.builders.append(ir.IRBuilder(for_end_block))
-        self.leave_scope()
+        self.exit_scope()
         return
 
     # Visit a parse tree produced by c2llvmParser#forInitStatement.
@@ -805,7 +805,7 @@ class Visitor(c2llvmVisitor):
         self.blocks.pop()
         self.builders.pop()
         self.local_vars.pop()
-        self.leave_scope()
+        self.exit_scope()
 
         return
 
@@ -1087,7 +1087,7 @@ class Visitor(c2llvmVisitor):
     def enter_scope(self):
         self.scope += 1
 
-    def leave_scope(self):
+    def exit_scope(self):
         for k in self.symbol_table:
             if(self.symbol_table[k][-1] == self.scope):
                 self.symbol_table[k].pop(-1)
