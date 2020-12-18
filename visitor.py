@@ -51,16 +51,17 @@ class Visitor(c2llvmVisitor):
         self.init_internal_functions()
 
     def init_internal_functions(self):
-        printfty = ir.FunctionType(int32, [ir.PointerType(int8)], var_arg=True)
-        printf = ir.Function(self.module, printfty, name="printf")
+        printf_ty = ir.FunctionType(
+            int32, [ir.PointerType(int8)], var_arg=True)
+        printf = ir.Function(self.module, printf_ty, name="printf")
         self.functions['printf'] = printf
 
-        getsty = ir.FunctionType(int32, [ir.PointerType(int8)])
-        gets = ir.Function(self.module, getsty, name="gets")
+        gets_ty = ir.FunctionType(int32, [ir.PointerType(int8)])
+        gets = ir.Function(self.module, gets_ty, name="gets")
         self.functions['gets'] = gets
 
-        strlenty = ir.FunctionType(int32, [ir.PointerType(int8)])
-        strlen = ir.Function(self.module, strlenty, name="strlen")
+        strlen_ty = ir.FunctionType(int32, [ir.PointerType(int8)])
+        strlen = ir.Function(self.module, strlen_ty, name="strlen")
         self.functions['strlen'] = strlen
 
     # Visit a parse tree produced by c2llvmParser#prog.
@@ -111,7 +112,7 @@ class Visitor(c2llvmVisitor):
                     v_types.append(v_type)
                 elif ctx.getChild(2*index+1).getChildCount() == 4:
                     res = self.visit(ctx.getChild(2*index+1))
-                    v_names.append(res['name'])
+                    v_names.append(res['var'])
                     v_types.append(ir.ArrayType(v_type, res['length']))
                 else:
                     logger.error("Struct Member Declaration Error")
@@ -139,12 +140,12 @@ class Visitor(c2llvmVisitor):
             self.is_load_var = is_load_var_backup
 
             res = self.convertToType(res, v_res['type'])
-            builder.store(res['name'], v_res['name'])
+            builder.store(res['var'], v_res['var'])
 
-            tmp_var = builder.load(v_res['name'])
+            tmp_var = builder.load(v_res['var'])
             res = {
                 'type': v_res['type'],
-                'name': tmp_var
+                'var': tmp_var
             }
 
         return res
@@ -171,11 +172,10 @@ class Visitor(c2llvmVisitor):
 
         self.end_condition_block = end_condition_block_backup
 
-        block = self.blocks.pop()
+        self.blocks.pop()
         builder = self.builders.pop()
 
-        if not block.is_terminated:
-            builder.branch(end_condition_block)
+        builder.branch(end_condition_block)
 
         self.blocks.append(end_condition_block)
         self.builders.append(ir.IRBuilder(end_condition_block))
@@ -191,7 +191,7 @@ class Visitor(c2llvmVisitor):
         if_true_block = builder.append_basic_block()
         if_false_block = builder.append_basic_block()
         res = self.toBool(res)
-        builder.cbranch(res['name'], if_true_block, if_false_block)
+        builder.cbranch(res['var'], if_true_block, if_false_block)
 
         self.blocks.pop()
         self.builders.pop()
@@ -203,9 +203,8 @@ class Visitor(c2llvmVisitor):
         for index in range(5, ctx.getChildCount()-1):
             self.visit(ctx.getChild(index))
 
-        if not self.blocks[-1].is_terminated:
-            builder = self.builders[-1]
-            builder.branch(self.end_condition_block)
+        builder = self.builders[-1]
+        builder.branch(self.end_condition_block)
 
         self.blocks.pop()
         self.builders.pop()
@@ -227,7 +226,7 @@ class Visitor(c2llvmVisitor):
         elseif_false_block = builder.append_basic_block()
 
         res = self.toBool(res)
-        builder.cbranch(res['name'], elseif_true_block, elseif_false_block)
+        builder.cbranch(res['var'], elseif_true_block, elseif_false_block)
 
         self.blocks.pop()
         self.builders.pop()
@@ -239,9 +238,8 @@ class Visitor(c2llvmVisitor):
         for index in range(6, ctx.getChildCount()-1):
             self.visit(ctx.getChild(index))
 
-        if not self.blocks[-1].is_terminated:
-            builder = self.builders[-1]
-            builder.branch(self.end_condition_block)
+        builder = self.builders[-1]
+        builder.branch(self.end_condition_block)
 
         self.blocks.pop()
         self.builders.pop()
@@ -285,7 +283,7 @@ class Visitor(c2llvmVisitor):
         res = self.toBool(res)
 
         builder = self.builders[-1]
-        builder.cbranch(res['name'], while_body_block, while_end_block)
+        builder.cbranch(res['var'], while_body_block, while_end_block)
 
         self.blocks.pop()
         self.builders.pop()
@@ -330,7 +328,7 @@ class Visitor(c2llvmVisitor):
         res = self.toBool(res)
 
         builder = self.builders[-1]
-        builder.cbranch(res['name'], for_body_block, for_end_block)
+        builder.cbranch(res['var'], for_body_block, for_end_block)
 
         self.blocks.pop()
         self.builders.pop()
@@ -371,7 +369,7 @@ class Visitor(c2llvmVisitor):
         expr_res = self.convertToType(expr_res, v_res['type'])
 
         builder = self.builders[-1]
-        builder.store(expr_res['name'], v_res['name'])
+        builder.store(expr_res['var'], v_res['var'])
 
         if ctx.getChildCount() >= 5:
             self.visit(ctx.getChild(4))
@@ -392,7 +390,7 @@ class Visitor(c2llvmVisitor):
         expr_res = self.convertToType(expr_res, v_res['type'])
 
         builder = self.builders[-1]
-        builder.store(expr_res['name'], v_res['name'])
+        builder.store(expr_res['var'], v_res['var'])
 
         if ctx.getChildCount() >= 5:
             self.visit(ctx.getChild(4))
@@ -407,14 +405,14 @@ class Visitor(c2llvmVisitor):
             ret = builder.ret_void()
             return {
                 'type': void,
-                'name': ret
+                'var': ret
             }
 
         res = self.visit(ctx.getChild(1))
-        ret = builder.ret(res['name'])
+        ret = builder.ret(res['var'])
         return {
             'type': ret.type,
-            'name': ret
+            'var': ret
         }
 
     # Visit a parse tree produced by c2llvmParser#breakStatement.
@@ -443,14 +441,14 @@ class Visitor(c2llvmVisitor):
 
                 self.global_vars[v_name] = {
                     'type': v_type,
-                    'name': tmp_var
+                    'var': tmp_var
                 }
 
                 has_assign = (ctx.getChild(index+1).getText() == '=')
 
                 if has_assign:
                     res = self.visit(ctx.getChild(index+2))
-                    tmp_var.initializer = ir.Constant(res['type'], res['name'])
+                    tmp_var.initializer = ir.Constant(res['type'], res['var'])
                     index += 4
                 else:
                     index += 2
@@ -471,7 +469,7 @@ class Visitor(c2llvmVisitor):
             tmp_var = builder.alloca(v_type, name=v_name)
             local_var_list[v_name] = {
                 'type': v_type,
-                'name': tmp_var
+                'var': tmp_var
             }
 
             if ctx.getChild(index+1).getText() != '=':
@@ -479,7 +477,7 @@ class Visitor(c2llvmVisitor):
             else:
                 res = self.visit(ctx.getChild(index+2))
                 res = self.convertToType(res, v_type)
-                builder.store(res['name'], tmp_var)
+                builder.store(res['var'], tmp_var)
                 index += 4
         return
 
@@ -499,7 +497,7 @@ class Visitor(c2llvmVisitor):
             tmp_var.linkage = 'common'
             self.global_vars[v_name] = {
                 'type': ir.ArrayType(v_type, array_len),
-                'name': tmp_var
+                'var': tmp_var
             }
             return
 
@@ -512,7 +510,7 @@ class Visitor(c2llvmVisitor):
         tmp_var = builder.alloca(ir.ArrayType(v_type, array_len), name=v_name)
         local_var_list[v_name] = {
             'type': ir.ArrayType(v_type, array_len),
-            'name': tmp_var
+            'var': tmp_var
         }
         return
 
@@ -536,7 +534,7 @@ class Visitor(c2llvmVisitor):
                 self.global_vars[v_name] = {
                     'struct_name': struct_name,
                     'type': v_type,
-                    'name': tmp_var
+                    'var': tmp_var
                 }
             else:
                 builder = self.builders[-1]
@@ -547,11 +545,11 @@ class Visitor(c2llvmVisitor):
                 local_var_list[v_name] = {
                     'struct_name': struct_name,
                     'type': v_type,
-                    'name': tmp_var
+                    'var': tmp_var
                 }
         else:
             res = self.visit(ctx.getChild(1))
-            v_name = res['name']
+            v_name = res['var']
 
             v_type = ir.ArrayType(v_type, res['length'])
             self.insert_symbol_table(v_name)
@@ -566,7 +564,7 @@ class Visitor(c2llvmVisitor):
                 self.global_vars[v_name] = {
                     'struct_name': struct_name,
                     'type': v_type,
-                    'name': tmp_var
+                    'var': tmp_var
                 }
             else:
                 builder = self.builders[-1]
@@ -578,7 +576,7 @@ class Visitor(c2llvmVisitor):
                 local_var_list[v_name] = {
                     'struct_name': struct_name,
                     'type': v_type,
-                    'name': tmp_var
+                    'var': tmp_var
                 }
         return
 
@@ -600,7 +598,7 @@ class Visitor(c2llvmVisitor):
 
             zero_base = ir.Constant(int32, 0)
             tmp_var = builder.gep(
-                res['name'], [zero_base, index_res['name']], inbounds=True)
+                res['var'], [zero_base, index_res['var']], inbounds=True)
 
             if self.is_load_var:
                 tmp_var = builder.load(tmp_var)
@@ -608,7 +606,7 @@ class Visitor(c2llvmVisitor):
             return {
                 'struct_name': res['struct_name'] if 'struct_name' in res else None,
                 'type': res['type'].element,
-                'name': tmp_var
+                'var': tmp_var
             }
         else:
             pass
@@ -631,14 +629,14 @@ class Visitor(c2llvmVisitor):
                 offset = ir.Constant(int32, index)
 
                 tmp_var = builder.gep(
-                    res['name'], [zero_base, offset], inbounds=True)
+                    res['var'], [zero_base, offset], inbounds=True)
 
                 if self.is_load_var:
                     tmp_var = builder.load(tmp_var)
 
                 return {
                     'type': self.structures[struct_name]['struct'].elements[index],
-                    'name': tmp_var
+                    'var': tmp_var
                 }
             else:
                 pass
@@ -656,14 +654,14 @@ class Visitor(c2llvmVisitor):
                 zero_base = ir.Constant(int32, 0)
                 offset = ir.Constant(int32, index)
                 tmp_var = builder.gep(
-                    res['name'], [zero_base, offset], inbounds=True)
+                    res['var'], [zero_base, offset], inbounds=True)
 
                 if self.is_load_var:
                     tmp_var = builder.load(tmp_var)
 
                 return {
                     'type': self.structures[struct_name]['struct'].elements[index],
-                    'name': tmp_var
+                    'var': tmp_var
                 }
             else:
                 pass
@@ -686,16 +684,16 @@ class Visitor(c2llvmVisitor):
 
             args = self.visit(ctx.getChild(2))
             args[0] = builder.gep(
-                args[0]['name'], [zero_base, zero_base], inbounds=True)
+                args[0]['var'], [zero_base, zero_base], inbounds=True)
 
             for index in range(1, len(args)):
-                args[index] = args[index]['name']
+                args[index] = args[index]['var']
 
             ret = builder.call(printf, args)
 
             return {
                 'type': int32,
-                'name': ret
+                'var': ret
             }
 
         if func_name == 'gets':
@@ -709,12 +707,12 @@ class Visitor(c2llvmVisitor):
             self.is_load_var = is_load_var_backup
 
             args[0] = builder.gep(
-                args[0]['name'], [zero_base, zero_base], inbounds=True)
+                args[0]['var'], [zero_base, zero_base], inbounds=True)
             ret = builder.call(gets, args)
 
             return {
                 'type': int32,
-                'name': ret
+                'var': ret
             }
 
         if func_name == 'strlen':
@@ -728,12 +726,12 @@ class Visitor(c2llvmVisitor):
             self.is_load_var = is_load_var_backup
 
             args[0] = builder.gep(
-                args[0]['name'], [zero_base, zero_base], inbounds=True)
+                args[0]['var'], [zero_base, zero_base], inbounds=True)
             ret = builder.call(strlen, args)
 
             return {
                 'type': int32,
-                'name': ret
+                'var': ret
             }
 
         builder = self.builders[-1]
@@ -747,12 +745,12 @@ class Visitor(c2llvmVisitor):
                 params[index] = self.convertToType(
                     params[index], func.args[index].type)
 
-            params = list(map(lambda param: param['name'], params))
+            params = list(map(lambda param: param['var'], params))
 
             tmp_var = builder.call(func, params)
             return {
                 'type': func.function_type.return_type,
-                'name': tmp_var
+                'var': tmp_var
             }
         else:
             logger.error("Func Expression Error")
@@ -781,7 +779,7 @@ class Visitor(c2llvmVisitor):
         func = ir.Function(self.module, func_proto, name=func_name)
 
         for index in range(0, len(params)):
-            func.args[index].name = params[index]['name']
+            func.args[index].name = params[index]['var']
 
         block = func.append_basic_block(name=func_name+'.body')
         builder = ir.IRBuilder(block)
@@ -794,9 +792,9 @@ class Visitor(c2llvmVisitor):
         for index in range(0, len(params)):
             tmp_var = builder.alloca(params[index]['type'])
             builder.store(func.args[index], tmp_var)
-            local_var_list[params[index]['name']] = {
+            local_var_list[params[index]['var']] = {
                 'type': params[index]['type'],
-                'name': tmp_var
+                'var': tmp_var
             }
 
         self.local_vars.append(local_var_list)
@@ -823,7 +821,7 @@ class Visitor(c2llvmVisitor):
         self.insert_symbol_table(v_name)
         return {
             'type': v_type,
-            'name': v_name
+            'var': v_name
         }
 
     # Visit a parse tree produced by c2llvmParser#Neg.
@@ -843,16 +841,16 @@ class Visitor(c2llvmVisitor):
         tmp_var = None
 
         if ctx.getChild(1).getText() == '*':
-            tmp_var = builder.mul(lres['name'], rres['name'])
+            tmp_var = builder.mul(lres['var'], rres['var'])
         elif ctx.getChild(1).getText() == '/':
-            tmp_var = builder.sdiv(lres['name'], rres['name'])
+            tmp_var = builder.sdiv(lres['var'], rres['var'])
         elif ctx.getChild(1).getText() == '%':
-            tmp_var = builder.srem(lres['name'], rres['name'])
+            tmp_var = builder.srem(lres['var'], rres['var'])
         else:
             logger.error("MulDivMod Error")
         return {
             'type': lres['type'],
-            'name': tmp_var
+            'var': tmp_var
         }
 
     # Visit a parse tree produced by c2llvmParser#FunctionExpr.
@@ -866,11 +864,11 @@ class Visitor(c2llvmVisitor):
         rres = self.visit(ctx.getChild(2))
         rres = self.toBool(rres)
         builder = self.builders[-1]
-        res = builder.or_(lres['name'], rres['name'])
+        res = builder.or_(lres['var'], rres['var'])
 
         return {
             'type': lres['type'],
-            'name': res
+            'var': res
         }
 
     # Visit a parse tree produced by c2llvmParser#Parens.
@@ -893,10 +891,10 @@ class Visitor(c2llvmVisitor):
         rres = self.toBool(rres)
         builder = self.builders[-1]
 
-        res = builder.and_(lres['name'], rres['name'])
+        res = builder.and_(lres['var'], rres['var'])
         return {
             'type': lres['type'],
-            'name': res
+            'var': res
         }
 
     # Visit a parse tree produced by c2llvmParser#Compare.
@@ -911,14 +909,14 @@ class Visitor(c2llvmVisitor):
         tmp_var = None
 
         if lres['type'] == double:
-            tmp_var = builder.fcmp_ordered(op, lres['name'], rres['name'])
+            tmp_var = builder.fcmp_ordered(op, lres['var'], rres['var'])
         elif self.isInteger(lres):
-            tmp_var = builder.icmp_signed(op, lres['name'], rres['name'])
+            tmp_var = builder.icmp_signed(op, lres['var'], rres['var'])
         else:
             logger.error("Compare Error")
         return {
             'type': int8,
-            'name': tmp_var
+            'var': tmp_var
         }
 
     # Visit a parse tree produced by c2llvmParser#ArrayItem.
@@ -938,10 +936,10 @@ class Visitor(c2llvmVisitor):
         if ctx.getChild(0).getText() == '-':
             res = self.visit(ctx.getChild(1))
             builder = self.builders[-1]
-            tmp_var = builder.neg(res['name'])
+            tmp_var = builder.neg(res['var'])
             return {
                 'type': res['type'],
-                'name': tmp_var
+                'var': tmp_var
             }
         return self.visit(ctx.getChild(0))
 
@@ -950,10 +948,10 @@ class Visitor(c2llvmVisitor):
         if ctx.getChild(0).getText() == '-':
             res = self.visit(ctx.getChild(1))
             builder = self.builders[-1]
-            tmp_var = builder.neg(res['name'])
+            tmp_var = builder.neg(res['var'])
             return {
                 'type': res['type'],
-                'name': tmp_var
+                'var': tmp_var
             }
         return self.visit(ctx.getChild(0))
 
@@ -968,14 +966,14 @@ class Visitor(c2llvmVisitor):
         tmp_var = None
 
         if ctx.getChild(1).getText() == '+':
-            tmp_var = builder.add(lres['name'], rres['name'])
+            tmp_var = builder.add(lres['var'], rres['var'])
         elif ctx.getChild(1).getText() == '-':
-            tmp_var = builder.sub(lres['name'], rres['name'])
+            tmp_var = builder.sub(lres['var'], rres['var'])
         else:
             logger.error("AddSub Error")
         return {
             'type': lres['type'],
-            'name': tmp_var
+            'var': tmp_var
         }
 
     # Visit a parse tree produced by c2llvmParser#vType.
@@ -997,7 +995,7 @@ class Visitor(c2llvmVisitor):
     def visitVInt(self, ctx: c2llvmParser.VIntContext):
         return {
             'type': int32,
-            'name': ir.Constant(int32, int(ctx.getText()))
+            'var': ir.Constant(int32, int(ctx.getText()))
         }
 
     # Visit a parse tree produced by c2llvmParser#vChar.
@@ -1005,14 +1003,14 @@ class Visitor(c2llvmVisitor):
     def visitVChar(self, ctx: c2llvmParser.VCharContext):
         return {
             'type': int8,
-            'name': ir.Constant(int8, ord(ctx.getText()[1]))
+            'var': ir.Constant(int8, ord(ctx.getText()[1]))
         }
 
     # Visit a parse tree produced by c2llvmParser#vDouble.
     def visitVDouble(self, ctx: c2llvmParser.VDoubleContext):
         return {
             'type': double,
-            'name': ir.Constant(double, float(ctx.getText()))
+            'var': ir.Constant(double, float(ctx.getText()))
         }
 
     # Visit a parse tree produced by c2llvmParser#vString.
@@ -1030,7 +1028,7 @@ class Visitor(c2llvmVisitor):
             int8, v_len), bytearray(v_string, 'utf-8'))
         return {
             'type': ir.ArrayType(int8, v_len),
-            'name': v_name
+            'var': v_name
         }
 
     # Visit a parse tree produced by c2llvmParser#vId.
@@ -1039,39 +1037,40 @@ class Visitor(c2llvmVisitor):
         if not self.check_var_define(v_name):
             return {
                 'type': int32,
-                'name': ir.Constant(int32, 0)
+                'var': ir.Constant(int32, 0)
             }
         builder = self.builders[-1]
-        for local_var_list in reversed(self.local_vars):
-            if v_name in local_var_list:
-                if self.is_load_var:
-                    tmp_var = builder.load(local_var_list[v_name]['name'])
-                    return {
-                        'type': local_var_list[v_name]['type'],
-                        'name': tmp_var,
-                        'struct_name': local_var_list[v_name]['struct_name'] if 'struct_name' in local_var_list[v_name] else None
-                    }
-                else:
-                    return {
-                        'type': local_var_list[v_name]['type'],
-                        'name': local_var_list[v_name]['name'],
-                        'struct_name': local_var_list[v_name]['struct_name'] if 'struct_name' in local_var_list[v_name] else None
-                    }
 
         if v_name in self.global_vars:
             if self.is_load_var:
-                tmp_var = builder.load(self.global_vars[v_name]['name'])
+                tmp_var = builder.load(self.global_vars[v_name]['var'])
                 return {
                     'type': self.global_vars[v_name]['type'],
-                    'name': tmp_var,
+                    'var': tmp_var,
                     'struct_name': self.global_vars[v_name]['struct_name'] if 'struct_name' in self.global_vars[v_name] else None
                 }
             else:
                 return {
                     'type': self.global_vars[v_name]['type'],
-                    'name': self.global_vars[v_name]['name'],
+                    'var': self.global_vars[v_name]['var'],
                     'struct_name': self.global_vars[v_name]['struct_name'] if 'struct_name' in self.global_vars[v_name] else None
                 }
+
+        for local_var_list in reversed(self.local_vars):
+            if v_name in local_var_list:
+                if self.is_load_var:
+                    tmp_var = builder.load(local_var_list[v_name]['var'])
+                    return {
+                        'type': local_var_list[v_name]['type'],
+                        'var': tmp_var,
+                        'struct_name': local_var_list[v_name]['struct_name'] if 'struct_name' in local_var_list[v_name] else None
+                    }
+                else:
+                    return {
+                        'type': local_var_list[v_name]['type'],
+                        'var': local_var_list[v_name]['var'],
+                        'struct_name': local_var_list[v_name]['struct_name'] if 'struct_name' in local_var_list[v_name] else None
+                    }
         logger.error("VId Error")
 
     # Visit a parse tree produced by c2llvmParser#vStruct.
@@ -1081,7 +1080,7 @@ class Visitor(c2llvmVisitor):
     # Visit a parse tree produced by c2llvmParser#vArray.
     def visitVArray(self, ctx: c2llvmParser.VArrayContext):
         return {
-            'name': ctx.getChild(0).getText(),
+            'var': ctx.getChild(0).getText(),
             'length': int(ctx.getChild(2).getText())
         }
 
@@ -1123,17 +1122,17 @@ class Visitor(c2llvmVisitor):
         builder = self.builders[-1]
         if res['type'] == int8 or res['type'] == int32:
             tmp_var = builder.icmp_signed(
-                op, res['name'], ir.Constant(res['type'], 0))
+                op, res['var'], ir.Constant(res['type'], 0))
             return {
                 'type': int1,
-                'name': tmp_var
+                'var': tmp_var
             }
         elif res['type'] == double:
             tmp_var = builder.fcmp_ordered(
-                op, res['name'], ir.Constant(res['type'], 0))
+                op, res['var'], ir.Constant(res['type'], 0))
             return {
                 'type': int1,
-                'name': tmp_var
+                'var': tmp_var
             }
         elif res['type'] == int1:
             return res
@@ -1151,16 +1150,16 @@ class Visitor(c2llvmVisitor):
         builder = self.builders[-1]
 
         if dtype == int32 or dtype == int8:
-            tmp_var = builder.sext(res['name'], dtype)
+            tmp_var = builder.sext(res['var'], dtype)
             return {
                 'type': dtype,
-                'name': tmp_var
+                'var': tmp_var
             }
         elif dtype == double:
-            tmp_var = builder.sitofp(res['name'], dtype)
+            tmp_var = builder.sitofp(res['var'], dtype)
             return {
                 'type': dtype,
-                'name': tmp_var
+                'var': tmp_var
             }
         else:
             logger.error("ConvertToType Error")
