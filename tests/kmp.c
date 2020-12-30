@@ -3,25 +3,25 @@
 
 int main()
 {
-    char S[100];
-    char T[100];
+    char s[100];
+    char t[100];
     int next[100];
     int s_len, t_len;
     int i = 0;
     int j = 0;
     int flag = 0;
 
-    gets(S);
-    gets(T);
-    s_len = strlen(S);
-    t_len = strlen(T);
+    gets(s);
+    gets(t);
+    s_len = strlen(s);
+    t_len = strlen(t);
 
     next[0] = -1;
     for (i = 1, j = -1; i < t_len; i = i + 1)
     {
-        for (; j >= 0 && T[i] != T[j + 1]; j = next[j])
+        for (; j >= 0 && t[i] != t[j + 1]; j = next[j])
             ;
-        if (T[i] == T[j + 1])
+        if (t[i] == t[j + 1])
         {
             j = j + 1;
         }
@@ -30,9 +30,9 @@ int main()
 
     for (i = 0, j = -1; i < s_len; i = i + 1)
     {
-        for (; j >= 0 && S[i] != T[j + 1]; j = next[j])
+        for (; j >= 0 && s[i] != t[j + 1]; j = next[j])
             ;
-        if (S[i] == T[j + 1])
+        if (s[i] == t[j + 1])
         {
             j = j + 1;
         }
