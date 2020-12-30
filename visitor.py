@@ -591,28 +591,25 @@ class Visitor(c2llvmVisitor):
         res = self.visit(ctx.getChild(0))
         self.is_load_var = is_load_var_backup
 
-        if isinstance(res['type'], ir.types.ArrayType):
-            builder = self.builders[-1]
+        builder = self.builders[-1]
 
-            is_load_var_backup = self.is_load_var
-            self.is_load_var = True
-            index_res = self.visit(ctx.getChild(2))
-            self.is_load_var = is_load_var_backup
+        is_load_var_backup = self.is_load_var
+        self.is_load_var = True
+        index_res = self.visit(ctx.getChild(2))
+        self.is_load_var = is_load_var_backup
 
-            zero_base = ir.Constant(int32, 0)
-            tmp_var = builder.gep(
-                res['var'], [zero_base, index_res['var']], inbounds=True)
+        zero_base = ir.Constant(int32, 0)
+        tmp_var = builder.gep(
+            res['var'], [zero_base, index_res['var']], inbounds=True)
 
-            if self.is_load_var:
-                tmp_var = builder.load(tmp_var)
+        if self.is_load_var:
+            tmp_var = builder.load(tmp_var)
 
-            return {
-                'struct_name': res['struct_name'] if 'struct_name' in res else None,
-                'type': res['type'].element,
-                'var': tmp_var
-            }
-        else:
-            pass
+        return {
+            'struct_name': res['struct_name'] if 'struct_name' in res else None,
+            'type': res['type'].element,
+            'var': tmp_var
+        }
 
     # Visit a parse tree produced by c2llvmParser#vStructMember.
     def visitVStructMember(self, ctx: c2llvmParser.VStructMemberContext):
@@ -642,7 +639,7 @@ class Visitor(c2llvmVisitor):
                     'var': tmp_var
                 }
             else:
-                pass
+                logger.error("Not support")
 
         else:
             if ctx.getChild(2).getChildCount() == 1:
@@ -667,7 +664,7 @@ class Visitor(c2llvmVisitor):
                     'var': tmp_var
                 }
             else:
-                pass
+                logger.error("Not support")
 
     # Visit a parse tree produced by c2llvmParser#funcStatement.
     def visitFuncStatement(self, ctx: c2llvmParser.FuncStatementContext):
