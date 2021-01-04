@@ -16,7 +16,6 @@ def main(argv):
     v.visit(tree)
     if (len(argv)==3):
         print(v.module,file=open(argv[2],'w'))
-    else:
         print(v.module)
 
 if __name__ == '__main__':

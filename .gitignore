@@ -3,3 +3,4 @@ __pycache__/
 *.ll
 *.txt
 *.gz
+node_modules
